@@ -1,0 +1,9 @@
+{
+  "name": "eyetracking-server",
+  "version": "0.0.1",
+  "main": "server.js",
+  "author": "Jonathan Reisdorf",
+  "dependencies": {
+    "faye": "^1.1.1"
+  }
+}

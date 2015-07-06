@@ -11,6 +11,7 @@ var listener = {
         console.log(error);
     },
     onGazeData:function(gazeData){
+        console.log('\033[2J');
         console.log(gazeData);
     }
 };
