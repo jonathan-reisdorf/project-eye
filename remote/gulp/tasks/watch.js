@@ -11,4 +11,8 @@ gulp.task('scripts:watch', function () {
     gulp.watch(paths.assets.jshint, ['scripts']);
 });
 
-gulp.task('watch', ['styles:watch', 'scripts:watch']);
+gulp.task('copy:watch', function () {
+    gulp.watch(paths.assets.copy, ['copy']);
+});
+
+gulp.task('watch', ['styles:watch', 'scripts:watch', 'copy:watch']);

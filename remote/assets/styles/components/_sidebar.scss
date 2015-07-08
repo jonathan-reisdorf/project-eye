@@ -1,0 +1,60 @@
+.sidebar {
+  display:block;
+  background:$_cBackgroundSidebar;
+  min-height:100%;
+  box-sizing:border-box;
+  width:$_wSidebar;
+  color:$_cTextSidebar;
+  float:left;
+  box-shadow:inset -10px 0 10px rgba(0, 0, 0, 0.1);
+
+  &__caption {
+    margin-top:$_sDefault;
+    font-weight:300;
+    color:$_cTextSidebarCaption;
+    border-bottom:1px solid $_cBorderDark;
+    padding:$_sDefault;
+    text-transform:uppercase;
+
+    &:first-child {
+      margin-top:0;
+    }
+  }
+
+  &__list {
+    list-style:none outside;
+    margin:0;
+    padding:0;
+
+    li {
+      margin:0;
+      padding:$_sDefault;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+
+      &:nth-child(2n) {
+        background-color:rgba(255,255,255,0.05);
+      }
+    }
+
+    &--switcher {
+      user-select:none;
+
+      li {
+        transition:all 0.3s;
+        cursor:pointer;
+
+        &.add {
+          color:$_cTextSidebarCaption;
+          font-weight:600;
+        }
+
+        &.active {
+          border-left:3px solid $_cActive;
+          color:$_cActive;
+        }
+      }
+    }
+  }
+}

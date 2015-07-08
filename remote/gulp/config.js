@@ -9,6 +9,7 @@ var config = {
             styles : ASSETS_DIR + 'styles/**/*.{sass,scss}',
             scripts : ASSETS_DIR + 'scripts/main.js',
             jshint : ASSETS_DIR + 'scripts/**/*.js',
+            copy : ASSETS_DIR + '**/*.html',
             root : ASSETS_DIR
         },
         public : {

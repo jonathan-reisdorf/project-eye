@@ -1,3 +1,3 @@
 'use strict';
 
-require('gulp').task('build', ['scripts', 'styles']);
+require('gulp').task('build', ['scripts', 'styles', 'copy']);
