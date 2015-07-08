@@ -15,10 +15,13 @@ $_cTextSidebarCaption : #ccc;
 $_cTextGray : #999;
 
 $_cBorderLight : #ccc;
-$_cBorderDark : #777;
 
 $_cActive : #caff00;
 
+$_cTranspDarkMinor : rgba(0, 0, 0, 0.1);
+$_cTranspDarkDecent : rgba(0, 0, 0, 0.2);
+
+$_sMinor : 2px;
 $_sDefault : 10px;
 $_sBig : 50px;
 

@@ -26,7 +26,7 @@ module.exports = (function() {
 
   // Stop eye tracking after 20 seconds
   setTimeout(function(){
-    eyeTracker.release();
+    //eyeTracker.release();
   },20000);
 
   return {

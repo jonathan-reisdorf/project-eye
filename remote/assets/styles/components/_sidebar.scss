@@ -6,13 +6,13 @@
   width:$_wSidebar;
   color:$_cTextSidebar;
   float:left;
-  box-shadow:inset -10px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow:inset -10px 0 10px $_cTranspDarkMinor;
 
   &__caption {
-    margin-top:$_sDefault;
+    margin-top:$_sDefault * 4;
     font-weight:300;
     color:$_cTextSidebarCaption;
-    border-bottom:1px solid $_cBorderDark;
+    background:$_cTranspDarkDecent;
     padding:$_sDefault;
     text-transform:uppercase;
 
@@ -32,9 +32,16 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      border-bottom:1px solid $_cTranspDarkMinor;
 
-      &:nth-child(2n) {
-        background-color:rgba(255,255,255,0.05);
+      .fa {
+        float:right;
+        padding:$_sMinor;
+        color:$_cTextSidebarCaption;
+
+        &:hover {
+          color:$_cTextSidebar;
+        }
       }
     }
 

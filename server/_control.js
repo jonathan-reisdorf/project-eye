@@ -9,7 +9,10 @@ module.exports = function(hardware) {
   bayeux.addWebsocketExtension(deflate);
 
   var client   = bayeux.getClient(),
-    httpServer = http.createServer();
+    httpServer = http.createServer(function(request, response) {
+      response.writeHead(200, { 'Content-Type': 'text/plain' });
+      response.end('ERR: no mount found!');
+    });
 
   bayeux.attach(httpServer);
   httpServer.listen(7777);
