@@ -1,5 +1,6 @@
-$_fsDefault : 14px;
+$_fsDefault : 13px;
 $_fsIcon : 32px;
+$_fsMessage : 48px;
 
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 $_ffDefault : 'Open Sans', Helvetica, Arial, sans-serif;
@@ -11,6 +12,7 @@ $_cBackgroundSidebar : #444;
 $_cTextDefault : #333;
 $_cTextSidebar : #fff;
 $_cTextSidebarCaption : #ccc;
+$_cTextGray : #999;
 
 $_cBorderLight : #ccc;
 $_cBorderDark : #777;
@@ -18,5 +20,6 @@ $_cBorderDark : #777;
 $_cActive : #caff00;
 
 $_sDefault : 10px;
+$_sBig : 50px;
 
 $_wSidebar : 250px;

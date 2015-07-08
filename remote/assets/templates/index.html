@@ -6,23 +6,22 @@
   <link rel="stylesheet" href="styles/main.css" />
   <script src="scripts/bundle.js"></script>
 </head>
-<body>
+<body ng-app="application" ng-controller="AppCtrl as app">
   <aside class="sidebar">
-    <div class="sidebar__caption">
-      Servers
-    </div>
+    <div class="sidebar__caption">Servers</div>
     <ul class="sidebar__list sidebar__list--switcher">
-      <li class="active">localhost:7777</li>
-      <li>remote.jws1.project-a.com:7777</li>
-      <li class="add">Add a server...</li>
+      <li ng-repeat="server in app.servers.items" ng-class="{ active : app.servers.active === server }" ng-bind="server"></li>
+      <li class="add" ng-click="app.servers.add()">Add a server...</li>
     </ul>
 
-    <div class="sidebar__caption">
-      Tests 
-    </div>
+    <div class="sidebar__caption">Tests</div>
     <ul class="sidebar__list sidebar__list--switcher">
       <li class="add">Start a new test...</li>
     </ul>
   </aside>
+
+  <section class="test">
+    <div class="message" ng-if="!app.servers.items.length">Welcome! Please add a server before you can start testing...</div>
+  </section>
 </body>
 </html>
