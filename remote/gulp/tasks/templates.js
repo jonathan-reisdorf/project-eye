@@ -3,7 +3,7 @@
 var gulp = require('gulp'),
     paths = require('../config').paths;
 
-gulp.task('copy', function() {
-  return gulp.src(paths.assets.copy)
+gulp.task('templates', function() {
+  return gulp.src(paths.assets.templates)
     .pipe(gulp.dest(paths.public.root));
 });
