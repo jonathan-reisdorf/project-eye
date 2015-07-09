@@ -20,6 +20,7 @@ module.exports = function(hardware) {
   console.log('Server is running on :7777');
   return {
     client : client,
+    server : httpServer,
     hardware : hardware
   };
 };

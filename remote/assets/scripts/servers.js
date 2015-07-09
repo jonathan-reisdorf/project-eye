@@ -1,4 +1,4 @@
-module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage) {
+module.exports = ['$timeout', 'CommonStorage', 'CommonTests', function($timeout, CommonStorage, CommonTests) {
   'use strict';
   var self = this,
     Faye = require('faye');
@@ -28,15 +28,12 @@ module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage)
     }
 
     self.active = active;
-    var emptyPromise = new Promise(function(fulfill) {
-      return fulfill();
-    });
 
-    (self.fayeClient ? (self.fayeClient.disconnect() || emptyPromise) : emptyPromise).then(function() {
-      changeConnectionStatus('connecting');
-      self.fayeClient = new Faye.Client('http://' + active + '/control');
-      self.subscribeClient(self.fayeClient);
-    });
+    if (!self.active) {
+      return;
+    }
+
+    self.connectClient();
   };
 
   var save = function() {
@@ -44,6 +41,10 @@ module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage)
   };
 
   self.add = function() {
+    if (self.connectionStatus === 'connecting') {
+      return;
+    }
+
     var url = prompt('Please enter the server URL:');
     if (!url) {
       return;
@@ -67,6 +68,18 @@ module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage)
     save();
   };
 
+  self.connectClient = function() {
+    var emptyPromise = new Promise(function(fulfill) {
+      return fulfill();
+    });
+
+    (self.fayeClient ? (self.fayeClient.disconnect() || emptyPromise) : emptyPromise).then(function() {
+      changeConnectionStatus('connecting');
+      self.fayeClient = new Faye.Client('http://' + self.active + '/control');
+      self.subscribeClient(self.fayeClient);
+    });
+  };
+
   self.subscribeClient = function(client) {
     client.on('transport:down', function() {
       changeConnectionStatus('down');
@@ -76,9 +89,7 @@ module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage)
       changeConnectionStatus('up');
     });
 
-    client.subscribe('/messages', function(message) {
-      alert('Got a message: ' + message.text);
-    });
+    CommonTests.init(client);
   };
 
   self.setActive();
