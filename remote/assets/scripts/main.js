@@ -1,5 +1,6 @@
 var angular = require('angular');
-var application = angular.module('application', []);
+require('angular-resource');
+var application = angular.module('application', ['ngResource']);
 
 require('./directives')(application);
 

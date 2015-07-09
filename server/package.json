@@ -4,8 +4,10 @@
   "main": "server.js",
   "author": "Jonathan Reisdorf",
   "dependencies": {
+    "body-parser": "^1.13.2",
     "express": "^4.13.1",
     "faye": "^1.1.1",
+    "mongodb": "^2.0.36",
     "permessage-deflate": "^0.1.3"
   }
 }
