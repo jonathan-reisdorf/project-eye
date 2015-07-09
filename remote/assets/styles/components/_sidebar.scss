@@ -46,6 +46,7 @@
     }
 
     &--switcher {
+      transition:opacity 0.3s;
       user-select:none;
 
       li {
@@ -61,6 +62,15 @@
           border-left:3px solid $_cActive;
           color:$_cActive;
         }
+      }
+    }
+
+    &--disabled {
+      cursor:wait;
+      opacity:0.5;
+
+      li {
+        cursor:wait;
       }
     }
   }

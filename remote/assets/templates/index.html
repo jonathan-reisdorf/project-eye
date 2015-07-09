@@ -9,7 +9,7 @@
 <body ng-app="application" ng-controller="AppCtrl as app">
   <aside class="sidebar">
     <div class="sidebar__caption">Servers</div>
-    <ul class="sidebar__list sidebar__list--switcher">
+    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.servers.connectionStatus === 'connecting' }">
       <li ng-repeat="server in app.servers.items" ng-class="{ active : app.servers.active === server }" ng-click="app.servers.setActive(server)">
         <span ng-bind="server"></span>
         <span class="fa fa-times" stop-propagation="click" ng-click="app.servers.remove(server)"></span>
@@ -25,8 +25,13 @@
 
   <section class="test">
     <div class="message" ng-if="!app.servers.items.length">Welcome! Please add a server before you can start testing...</div>
-
-    Server ONLINE : {{ app.servers.online }}
+    <div class="message" ng-if="app.servers.items.length && (app.servers.connectionStatus === 'idle' || app.servers.connectionStatus === 'connecting')">
+      <span class="fa fa-plug"></span>
+    </div>
+    <div class="message" ng-if="app.servers.items.length && app.servers.connectionStatus === 'down'">
+      <span class="fa fa-plug"></span>
+      <span class="fa fa-bolt"></span>
+    </div>
   </section>
 </body>
 </html>

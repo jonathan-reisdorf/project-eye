@@ -3,19 +3,40 @@ module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage)
   var self = this,
     Faye = require('faye');
 
-  self.online = false;
+  self.connectionStatus = 'idle';
+  var changeConnectionStatus = function(newStatus) {
+    $timeout(function() {
+      self.connectionStatus = newStatus;
+    }, 0, true);
+  };
+
+  self.fayeClient = null;
   self.items = CommonStorage.get('servers') || [];
 
   self.setActive = function(item) {
+    if (self.connectionStatus === 'connecting') {
+      return;
+    }
+
     var active = item || self.active || self.items[0];
     if (active && self.items.indexOf(active) === -1) {
       active = self.items[0];
     }
 
-    self.active = active;
+    if (self.active === active) {
+      return;
+    }
 
-    var client = new Faye.Client('http://' + active + '/control');
-    self.subscribeClient(client);
+    self.active = active;
+    var emptyPromise = new Promise(function(fulfill) {
+      return fulfill();
+    });
+
+    (self.fayeClient ? (self.fayeClient.disconnect() || emptyPromise) : emptyPromise).then(function() {
+      changeConnectionStatus('connecting');
+      self.fayeClient = new Faye.Client('http://' + active + '/control');
+      self.subscribeClient(self.fayeClient);
+    });
   };
 
   var save = function() {
@@ -48,15 +69,11 @@ module.exports = ['$timeout', 'CommonStorage', function($timeout, CommonStorage)
 
   self.subscribeClient = function(client) {
     client.on('transport:down', function() {
-      $timeout(function() {
-        self.online = false;        
-      }, 0, true);
+      changeConnectionStatus('down');
     });
 
     client.on('transport:up', function() {
-      $timeout(function() {
-        self.online = true;        
-      }, 0, true);
+      changeConnectionStatus('up');
     });
 
     client.subscribe('/messages', function(message) {
