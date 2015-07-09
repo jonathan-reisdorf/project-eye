@@ -4,6 +4,7 @@
   "main": "server.js",
   "author": "Jonathan Reisdorf",
   "dependencies": {
+    "express": "^4.13.1",
     "faye": "^1.1.1",
     "permessage-deflate": "^0.1.3"
   }
