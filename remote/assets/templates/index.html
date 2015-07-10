@@ -17,8 +17,8 @@
       <li class="add" ng-click="app.servers.add()">Add a server...</li>
     </ul>
 
-    <div class="sidebar__caption">Tests</div>
-    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.servers.connectionStatus === 'connecting' }">
+    <div class="sidebar__caption" ng-if="app.servers.connectionStatus === 'up'">Tests</div>
+    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.servers.connectionStatus === 'connecting' }" ng-if="app.servers.connectionStatus === 'up'">
       <li ng-repeat="test in app.tests.items" ng-class="{ active : app.tests.active === test._id }" ng-click="app.tests.setActive(test._id)" ng-bind="test.name"></li>
       <li class="add" ng-click="app.tests.add()">Start a new test...</li>
     </ul>

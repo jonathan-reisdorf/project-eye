@@ -1,4 +1,4 @@
-module.exports = ['$timeout', 'CommonStorage', 'CommonTests', function($timeout, CommonStorage, CommonTests) {
+module.exports = ['$rootScope', '$timeout', 'CommonStorage', function($rootScope, $timeout, CommonStorage) {
   'use strict';
   var self = this,
     Faye = require('faye');
@@ -73,6 +73,7 @@ module.exports = ['$timeout', 'CommonStorage', 'CommonTests', function($timeout,
       return fulfill();
     });
 
+    $rootScope.$emit('server:disconnected');
     (self.fayeClient ? (self.fayeClient.disconnect() || emptyPromise) : emptyPromise).then(function() {
       changeConnectionStatus('connecting');
       self.fayeClient = new Faye.Client('http://' + self.active + '/control');
@@ -89,7 +90,7 @@ module.exports = ['$timeout', 'CommonStorage', 'CommonTests', function($timeout,
       changeConnectionStatus('up');
     });
 
-    CommonTests.init(client);
+    $rootScope.$emit('server:connected');
   };
 
   self.setActive();

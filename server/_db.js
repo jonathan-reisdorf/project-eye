@@ -27,6 +27,23 @@ exports.generic = function(collectionName, server) {
     });
   };
 
+   expose.findBy = function(req, res) {
+    var firstParamName = Object.keys(req.params)[0],
+      firstParam = req.params[firstParamName],
+      collection = db.collection(collectionName);
+
+    console.log('Retrieving ' + collectionName + ' by ' + firstParamName  + ': ' + firstParam);
+    collection.count(function(err, count) {
+      if (count) {
+        collection.findOne({ firstParam : new BSON.ObjectID(firstParam) }, function(err, item) {
+          res.send(item);
+        });
+      } else {
+        res.send([]);
+      }
+    });
+  };
+
   expose.findAll = function(req, res) {
     db.collection(collectionName).find().toArray(function(err, items) {
       res.send(items);
