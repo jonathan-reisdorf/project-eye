@@ -6,4 +6,9 @@ module.exports = function(control) {
     // console.log(gazeData);
   };
 
+  control.server.get('/tools/calibrate', function(req, res) {
+    var exec = require('child_process').exec;
+    exec('calibrate.cmd');
+    res.send('OK');
+  });
 };
