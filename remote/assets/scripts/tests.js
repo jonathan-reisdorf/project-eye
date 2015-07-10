@@ -45,7 +45,7 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
     }
 
     console.log('selected user:', id);
-  }
+  };
 
   $rootScope.$on('server:disconnected', function() {
     self.items = [];
