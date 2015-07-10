@@ -18,9 +18,14 @@
     </ul>
 
     <div class="sidebar__caption" ng-if="app.servers.connectionStatus === 'up'">Tests</div>
-    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.servers.connectionStatus === 'connecting' }" ng-if="app.servers.connectionStatus === 'up'">
+    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.tests.busy }" ng-if="app.servers.connectionStatus === 'up'">
       <li ng-repeat="test in app.tests.items" ng-class="{ active : app.tests.active === test._id }" ng-click="app.tests.setActive(test._id)" ng-bind="test.name"></li>
       <li class="add" ng-click="app.tests.add()">Start a new test...</li>
+    </ul>
+
+    <div class="sidebar__caption" ng-if="app.servers.connectionStatus === 'up'">Users</div>
+    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.tests.busy }" ng-if="app.servers.connectionStatus === 'up'">
+      <li ng-repeat="user in app.tests.users" ng-class="{ active : app.tests.activeUser === user._id }" ng-click="app.tests.setActiveUser(user._id)" ng-bind="user.name"></li>
     </ul>
   </aside>
 

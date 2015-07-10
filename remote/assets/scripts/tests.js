@@ -4,12 +4,20 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
   var testsResource = function() {
     return $resource('http://' + CommonServers.active + '/tests');
   };
+  var testsUsersResource = function(testId) {
+    return $resource('http://' + CommonServers.active + '/tests/' + testId + '/users');
+  };
 
   self.items = [];
+  self.users = [];
 
   self.busy = false;
 
   self.setActive = function(id) {
+    if (self.busy) {
+      return;
+    }
+
     var active = id || self.active || (self.items[0] || {})._id;
     if (active && !self.items.filter(function(item) {
       return item._id === active;
@@ -21,20 +29,23 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
       return;
     }
 
-    if (self.active) {
-      CommonServers.fayeClient.unsubscribe('/tests/' + self.active + '/users');
-    }
-
+    self.unsubscribe();
     self.active = active;
 
     if (!self.active) {
       return;
     }
 
-    CommonServers.fayeClient.subscribe('/tests/' + self.active + '/users', function(data) {
-      // do sth
-    });
+    self.subscribe();
   };
+
+  self.setActiveUser = function(id) {
+    if (self.busy) {
+      return;
+    }
+
+    console.log('selected user:', id);
+  }
 
   $rootScope.$on('server:disconnected', function() {
     self.items = [];
@@ -63,6 +74,25 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
     }, function() {
       self.items = testsResource().query();
     });
+  };
+
+  self.subscribe = function() {
+    self.busy = true;
+    CommonServers.fayeClient.subscribe('/tests/' + self.active + '/users', function(data) {
+      // do sth
+    });
+
+    self.users = testsUsersResource(self.active).query();
+    self.users.$promise.then(function() {
+      self.busy = false;
+    });
+  };
+
+  self.unsubscribe = function() {
+    self.users = [];
+    if (self.active) {
+      CommonServers.fayeClient.unsubscribe('/tests/' + self.active + '/users');
+    }
   };
 
   return self;
