@@ -11,4 +11,8 @@
   color:$_cTextDefault;
   box-sizing:border-box;
   z-index:0;
+
+  &-wide {
+    max-width:$_wMaxParagraph * 2;
+  }
 }

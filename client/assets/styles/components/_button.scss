@@ -1,4 +1,5 @@
 button {
+  transition:opacity $_tFast;
   padding:10px 20px;
   cursor:pointer;
   color:$_cTextContinue;
@@ -8,5 +9,10 @@ button {
 
   &.inline {
     margin-left:$_sNormal;
+  }
+
+  &[disabled] {
+    opacity:0.7;
+    cursor:not-allowed;
   }
 }
