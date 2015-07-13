@@ -1,14 +1,15 @@
 'use strict';
 
-var $ = require('jquery');
+var $ = require('jquery'),
+  server = '//localhost:7777/';
+  // @todo: un-hardcode this
 
 $(function() {
   var steps = {
     testData : {},
     items : {
       calibrate : function() {
-        $.get('//localhost:7777/tools/calibrate');
-        // @todo: un-hardcode this
+        $.get(sever + 'tools/calibrate');
         window.setTimeout(function() {
           steps.next();
         }, 10000);
@@ -47,8 +48,8 @@ $(function() {
         });
       }
     },
-    current : 'user',
-    queue : ['welcome', 'calibrate', 'user', 'prepare', 'start', 'exit'],
+    current : $('[data-step-initial]').data('step-initial') || 'welcome',
+    queue : ['index', 'welcome', 'calibrate', 'user', 'prepare', 'start', 'exit'],
     init : function() {
       steps.next(steps.current);
 

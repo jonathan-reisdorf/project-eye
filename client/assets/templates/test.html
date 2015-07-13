@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>eyetracking - client</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <script src="scripts/bundle.js"></script>
+</head>
+<body data-step-initial="welcome">
+  <div class="message step" data-step="welcome">
+    Welcome to this test @todo load test name from server. Put some generic explanatory stuff in here and @todo load test description from server.
+    <button class="inline" data-action="next" autofocus>OK, continue</button>
+  </div>
+  <div class="message step" data-step="calibrate">
+    Please wait until calibration tool has been loaded. Then follow the instructions...
+  </div>
+  <div class="message message-wide step" data-step="user">
+    <form>
+      Please enter your name: <input type="text" id="user_name" class="input__text" autofocus /><br />
+      Then click <button type="button" class="inline" data-action="next" disabled="disabled">here</button> to continue with the test.
+    </form>
+  </div>
+  <div class="message step" data-step="prepare">
+    Add some last general testing instructions here, like: Just go through the page and try to buy a product... You can leave the computer any time to end the test.
+    <button class="inline" data-action="next" autofocus>OK, start the test!</button>
+  </div>
+  <div class="step" data-step="start">
+    <iframe src="//www.contorion.de" class="frame" id="test_frame"></iframe>
+  </div>
+  <div class="message step" data-step="exit">
+    Thanks a lot for your time! :)
+  </div>
+</body>
+</html>
