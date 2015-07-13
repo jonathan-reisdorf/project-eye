@@ -22,7 +22,7 @@ exports.generic = function(collectionName, server) {
     var id = req.params.id;
 
     console.log('Retrieving ' + collectionName + ': ' + id);
-    db.collection(collectionName).findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+    db.collection(collectionName).findOne({ '_id' : mongo.ObjectID(id) }, function(err, item) {
       res.send(item);
     });
   };
@@ -35,7 +35,7 @@ exports.generic = function(collectionName, server) {
     console.log('Retrieving ' + collectionName + ' by ' + firstParamName  + ': ' + firstParam);
     collection.count(function(err, count) {
       if (count) {
-        collection.findOne({ firstParam : new BSON.ObjectID(firstParam) }, function(err, item) {
+        collection.findOne({ firstParamName : firstParam }, function(err, item) {
           res.send(item);
         });
       } else {
@@ -57,8 +57,8 @@ exports.generic = function(collectionName, server) {
       if (err) {
         res.send({'error':'An error has occurred'});
       } else {
-        console.log('Success: ' + JSON.stringify(result[0]));
-        res.send(result[0]);
+        console.log('Success: ' + JSON.stringify(result.ops[0]));
+        res.send(result.ops[0]);
       }
     });
   };
