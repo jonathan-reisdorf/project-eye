@@ -8,8 +8,29 @@ $(function() {
   var steps = {
     testData : {},
     items : {
+      index : function($container) {
+        $.get(server + 'tests', function(tests) {
+          var $select = $container.find('select');
+          $.each(tests, function() {
+            $select.append('<option value="' + this._id + '">' + this.name + '</option>');
+          });
+
+          $select.on('change', function() {
+            document.location.href = '/test/' + $(this).val();
+          });
+        });
+      },
+      welcome : function($container) {
+        var urlParts = document.location.href.split('/');
+        var testId = urlParts[urlParts.length - 1];
+
+        $.get(server + 'tests/' + testId, function(test) {
+          steps.testData = test;
+          $container.find('.text').html(test.description);
+        });
+      },
       calibrate : function() {
-        $.get(sever + 'tools/calibrate');
+        $.get(server + 'tools/calibrate');
         window.setTimeout(function() {
           steps.next();
         }, 10000);
@@ -25,18 +46,35 @@ $(function() {
         });
       },
       prepare : function($container) {
-        $container.find('button').off('click').on('click', function() {
-          var frame = $('#test_frame').get(0);
-
-          if (frame.requestFullscreen) {
-            frame.requestFullscreen();
-          } else if (frame.msRequestFullscreen) {
-            frame.msRequestFullscreen();
-          } else if (frame.mozRequestFullScreen) {
-            frame.mozRequestFullScreen();
-          } else if (frame.webkitRequestFullscreen) {
-            frame.webkitRequestFullscreen();
+        $.post(server + 'users', {
+          name : $('#user_name').val(),
+          test_id : steps.testData._id,
+          is_running : true,
+          last_page_url : steps.testData.url
+        }, function(data) {
+          if (data._id) {
+            steps.testData.userId = data._id;
+          } else {
+            window.alert('Something went wrong here :/ Reloading the test...');
+            return document.location.reload();
           }
+
+          $('#test_frame').attr('src', steps.testData.url);
+          $container.find('.text').html(steps.testData.intro);
+
+          $container.find('button').off('click').on('click', function() {
+            var frame = $('#test_frame').get(0);
+
+            if (frame.requestFullscreen) {
+              frame.requestFullscreen();
+            } else if (frame.msRequestFullscreen) {
+              frame.msRequestFullscreen();
+            } else if (frame.mozRequestFullScreen) {
+              frame.mozRequestFullScreen();
+            } else if (frame.webkitRequestFullscreen) {
+              frame.webkitRequestFullscreen();
+            }
+          });
         });
       },
       start : function() {

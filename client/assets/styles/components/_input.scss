@@ -9,4 +9,20 @@
     width:300px;
     outline:none;
   }
+
+  &__select {
+    display:inline;
+    border:0 none;
+    padding:3px $_sNormal;
+    margin:0;
+    background:transparent;
+    border-bottom:2px solid $_cTextDefault;
+    width:auto;
+    outline:none;
+    cursor:pointer;
+
+    option {
+        font-size:0.75em;
+    }
+  }
 }

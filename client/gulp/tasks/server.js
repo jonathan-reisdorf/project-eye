@@ -4,10 +4,20 @@ var gulp = require('gulp'),
     paths = require('../config').paths;
 
 gulp.task('server', function() {
-    var connect = require('gulp-connect');
+    var connect  = require('gulp-connect'),
+      modRewrite = require('connect-modrewrite');
 
-    return connect.server({
+    var server = connect.server({
         port : 7778,
-        root : paths.public.root
+        root : paths.public.root,
+        middleware : function() {
+          return [
+            modRewrite([
+              '^/test/.*$ /test.html [L]'
+            ])
+          ];
+        }
     });
+
+    return server;
 });

@@ -62,16 +62,15 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
   });
 
   self.add = function() {
-    var name = prompt('Please enter the test name:');
-    if (!name) { return; }
+    var config = {
+      name : prompt('Please enter the test name:'),
+      url : prompt('Please enter the test URL:'),
+      description : prompt('Please enter the test description:'),
+      intro : prompt('Please enter the test intro:')
+    };
+    if (!config.name || !config.url || !config.description || !config.intro) { return; }
 
-    var url = prompt('Please enter the test URL:');
-    if (!url) { return; }
-
-    testsResource().save({}, {
-      name : name,
-      url : url
-    }, function() {
+    testsResource().save({}, config, function() {
       self.items = testsResource().query();
     });
   };
