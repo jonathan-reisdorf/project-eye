@@ -32,10 +32,13 @@ exports.generic = function(collectionName, server) {
       firstParam = req.params[firstParamName],
       collection = db.collection(collectionName);
 
+    var query = {};
+    query[firstParamName] = firstParam;
+
     console.log('Retrieving ' + collectionName + ' by ' + firstParamName  + ': ' + firstParam);
     collection.count(function(err, count) {
       if (count) {
-        collection.findOne({ firstParamName : firstParam }, function(err, item) {
+        collection.find(query).toArray(function(err, item) {
           res.send(item);
         });
       } else {
