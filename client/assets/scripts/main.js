@@ -1,10 +1,48 @@
 'use strict';
 
 var $ = require('jquery'),
+  Faye = require('faye'),
   server = '//localhost:7777/';
   // @todo: un-hardcode this
 
 $(function() {
+  var serverEvents = {
+    client : new Faye.Client(server + 'control'),
+    getUserUrl : function() {
+      return '/tests/' + steps.testData._id + '/user/' + steps.testData.userId;
+    },
+    receiveMessage : function(message) {
+      if (message && message.data && message.data.origin.indexOf(steps.testData.url) !== -1) {
+        this.saveInDb({
+          last_page_url : message.data.href          
+        });
+      }
+    },
+    startConnection : function() {
+      window.addEventListener('message', this.receiveMessage);
+      this.saveInDb({
+        screen_width : window.screen.width,
+        screen_height : window.screen.height          
+      });
+    },
+    stopConnection : function() {
+      window.removeEventListener('message', this.receiveMessage);
+      this.saveInDb({
+        is_running : false          
+      });
+    },
+    saveInDb : function(data) {
+      this.client.publish(this.getUserUrl(), {
+        db : data
+      });
+    },
+    addUser : function(data) {
+      this.client.publish('/tests/' + steps.testData._id + '/users', {
+        added : data
+      });
+    }
+  };
+
   var steps = {
     testData : {},
     items : {
@@ -54,6 +92,7 @@ $(function() {
         }, function(data) {
           if (data._id) {
             steps.testData.userId = data._id;
+            serverEvents.addUser(data);
           } else {
             window.alert('Something went wrong here :/ Reloading the test...');
             return document.location.reload();
@@ -84,6 +123,11 @@ $(function() {
             steps.next('exit');
           }
         });
+
+        serverEvents.startConnection();
+      },
+      exit : function() {
+        serverEvents.stopConnection();
       }
     },
     current : $('[data-step-initial]').data('step-initial') || 'welcome',
