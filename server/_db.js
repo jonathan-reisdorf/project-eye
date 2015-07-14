@@ -16,29 +16,31 @@ db.open(function(err, db) {
 });
 
 exports.generic = function(collectionName, server) {
-  var expose = {};
+  var expose = {
+    db : db,
+    collection : db.collection(collectionName)
+  };
 
   expose.findById = function(req, res) {
     var id = req.params.id;
 
     console.log('Retrieving ' + collectionName + ': ' + id);
-    db.collection(collectionName).findOne({ '_id' : mongo.ObjectID(id) }, function(err, item) {
+    expose.collection.findOne({ '_id' : mongo.ObjectID(id) }, function(err, item) {
       res.send(item);
     });
   };
 
    expose.findBy = function(req, res) {
     var firstParamName = Object.keys(req.params)[0],
-      firstParam = req.params[firstParamName],
-      collection = db.collection(collectionName);
+      firstParam = req.params[firstParamName];
 
     var query = {};
     query[firstParamName] = firstParam;
 
     console.log('Retrieving ' + collectionName + ' by ' + firstParamName  + ': ' + firstParam);
-    collection.count(function(err, count) {
+    expose.collection.count(function(err, count) {
       if (count) {
-        collection.find(query).toArray(function(err, item) {
+        expose.collection.find(query).toArray(function(err, item) {
           res.send(item);
         });
       } else {
@@ -48,7 +50,8 @@ exports.generic = function(collectionName, server) {
   };
 
   expose.findAll = function(req, res) {
-    db.collection(collectionName).find().toArray(function(err, items) {
+    console.log('Retrieving ' + collectionName);
+    expose.collection.find().toArray(function(err, items) {
       res.send(items);
     });
   };
@@ -56,7 +59,7 @@ exports.generic = function(collectionName, server) {
   expose.add = function(req, res) {
     var item = req.body;
     console.log('Adding ' + collectionName + ': ' + JSON.stringify(item));
-    db.collection(collectionName).insert(item, {safe:true}, function(err, result) {
+    expose.collection.insert(item, {safe:true}, function(err, result) {
       if (err) {
         res.send({'error':'An error has occurred'});
       } else {
@@ -71,7 +74,7 @@ exports.generic = function(collectionName, server) {
     var item = req.body;
     console.log('Updating ' + collectionName + ': ' + id);
     console.log(JSON.stringify(item));
-    db.collection(collectionName).update({'_id':new BSON.ObjectID(id)}, item, {safe:true}, function(err, result) {
+    expose.collection.update({'_id':new BSON.ObjectID(id)}, item, {safe:true}, function(err, result) {
       if (err) {
         console.log('Error updating ' + collectionName + ': ' + err);
         res.send({'error':'An error has occurred'});
@@ -85,7 +88,7 @@ exports.generic = function(collectionName, server) {
   expose.delete = function(req, res) {
     var id = req.params.id;
     console.log('Deleting ' + collectionName + ': ' + id);
-    db.collection(collectionName).remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
+    expose.collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
       if (err) {
         res.send({'error':'An error has occurred - ' + err});
       } else {

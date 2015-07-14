@@ -1,4 +1,4 @@
-module.exports = function(control) {
+module.exports = function(control, tests) {
   'use strict';
 
   control.hardware.listener.onGazeData = function(gazeData) {
@@ -10,5 +10,22 @@ module.exports = function(control) {
     var exec = require('child_process').exec;
     exec('calibrate.cmd');
     res.send('OK');
+  });
+
+  var subscribeNewUser = function(data) {
+    control.client.subscribe('/tests/' + data.test_id + '/user/' + data._id, function(data) {
+      console.log('user detail(s) updated:', data);
+      // @todo: continue here!
+    });
+  };
+
+  tests.testsDb.db.open(function() {
+    tests.testsDb.collection.find().forEach(function(data) {
+      control.client.subscribe('/tests/' + data._id + '/users', function(data) {
+        if (data.added) {
+          subscribeNewUser(data.added);
+        }
+      });
+    });
   });
 };
