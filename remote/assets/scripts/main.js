@@ -3,6 +3,7 @@ require('angular-resource');
 var application = angular.module('application', ['ngResource']);
 
 require('./directives')(application);
+require('./filters')(application);
 
 application
   .factory('CommonStorage', require('./storage'))

@@ -1,6 +1,7 @@
 module.exports = ['$rootScope', '$resource', 'CommonServers', 'CommonTests', function($rootScope, $resource, CommonServers, CommonTests) {
   'use strict';
-  var self = this;
+  var self = this,
+    angular = require('angular');
   var usersResource = function(testId) {
     return $resource('http://' + CommonServers.active + '/tests/' + testId + '/users');
   };
@@ -18,12 +19,7 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', 'CommonTests', fun
     }
 
     self.active = id;
-
-    CommonServers.fayeClient.subscribe('/tests/' + CommonTests.active + '/user/' + self.active, function(data) {
-      console.log('received data!', data);
-    });
-
-    console.log('selected user:', id);
+    self.events.onInit(id);
   };
 
   $rootScope.$on('server:disconnected', function() {
@@ -60,6 +56,36 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', 'CommonTests', fun
       CommonServers.fayeClient.unsubscribe('/tests/' + id + '/user/' + self.active);
     }
   });
+
+  self.events = {
+    onInit : function(id) {
+      var currentUser = self.items.filter(function(item) {
+        return item._id === id;
+      })[0];
+
+      if (currentUser.is_running) {
+        self.events.onRunningTest(CommonTests.active, currentUser);
+      } else {
+        self.events.onFinishedTest(CommonTests.active, currentUser);
+      }
+    },
+    onRunningTest : function(testId, user) {
+      if (!user) { return; }
+
+      CommonServers.fayeClient.subscribe('/tests/' + CommonTests.active + '/user/' + user._id, function(data) {
+        console.log('received data!', data);
+      });
+
+      console.log(user);
+      self.dataRunning = angular.copy(user);
+    },
+    onFinishedTest : function(testId, user) {
+      if (!user) { return; }
+
+      self.dataRunning = null;
+      // show heatmap
+    }
+  };
 
   return self;
 }];
