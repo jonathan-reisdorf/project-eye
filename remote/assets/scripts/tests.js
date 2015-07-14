@@ -1,16 +1,11 @@
-module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', function($rootScope, $resource, CommonStorage, CommonServers) {
+module.exports = ['$rootScope', '$resource', 'CommonServers', function($rootScope, $resource, CommonServers) {
   'use strict';
   var self = this;
   var testsResource = function() {
     return $resource('http://' + CommonServers.active + '/tests');
   };
-  var testsUsersResource = function(testId) {
-    return $resource('http://' + CommonServers.active + '/tests/' + testId + '/users');
-  };
 
   self.items = [];
-  self.users = [];
-
   self.busy = false;
 
   self.setActive = function(id) {
@@ -29,22 +24,14 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
       return;
     }
 
-    self.unsubscribe();
+    $rootScope.$emit('test:unselected', self.active);
     self.active = active;
 
     if (!self.active) {
       return;
     }
 
-    self.subscribe();
-  };
-
-  self.setActiveUser = function(id) {
-    if (self.busy) {
-      return;
-    }
-
-    console.log('selected user:', id);
+    $rootScope.$emit('test:selected', self.active);
   };
 
   $rootScope.$on('server:disconnected', function() {
@@ -53,8 +40,10 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
   });
 
   $rootScope.$on('server:connected', function() {
+    self.busy = true;
     self.items = testsResource().query();
     self.items.$promise.then(function() {
+      self.busy = false;
       self.setActive();
     });
 
@@ -70,28 +59,13 @@ module.exports = ['$rootScope', '$resource', 'CommonStorage', 'CommonServers', f
     };
     if (!config.name || !config.url || !config.description || !config.intro) { return; }
 
+    self.busy = true;
     testsResource().save({}, config, function() {
       self.items = testsResource().query();
+      self.items.$promise.then(function() {
+        self.busy = false;
+      });
     });
-  };
-
-  self.subscribe = function() {
-    self.busy = true;
-    CommonServers.fayeClient.subscribe('/tests/' + self.active + '/users', function(data) {
-      // do sth
-    });
-
-    self.users = testsUsersResource(self.active).query();
-    self.users.$promise.then(function() {
-      self.busy = false;
-    });
-  };
-
-  self.unsubscribe = function() {
-    self.users = [];
-    if (self.active) {
-      CommonServers.fayeClient.unsubscribe('/tests/' + self.active + '/users');
-    }
   };
 
   return self;
