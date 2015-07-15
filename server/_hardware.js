@@ -16,18 +16,11 @@ module.exports = (function() {
     }
   };
 
-  //eyeTracker.init();
-  //eyeTracker.setListener(listener);
+  eyeTracker.init();
+  eyeTracker.setListener(listener);
 
   // console.log('Library version: ' + eyeTracker.getLibraryVersion());
   // console.log('Model name: ' + eyeTracker.getModelName());
-
-  //eyeTracker.start();
-
-  // Stop eye tracking after 20 seconds
-  setTimeout(function(){
-    //eyeTracker.release();
-  },20000);
 
   return {
     listener : listener,

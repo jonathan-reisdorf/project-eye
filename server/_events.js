@@ -3,7 +3,7 @@ module.exports = function(control, tests, heatmaps) {
 
   control.hardware.listener.onGazeData = function(gazeData) {
     // console.log('\033[2J');
-    // console.log(gazeData);
+    heatmaps.processEyeData(gazeData);
   };
 
   control.server.get('/tools/calibrate', function(req, res) {

@@ -17,6 +17,8 @@ module.exports = function(control) {
       currentPageData.url = userData.last_page_url;
       currentPageData.map_history = [];
       currentPageData.map_accumulated = [];
+
+      control.hardware.eyeTracker.start();
     },
     changePage : function(newUrl) {
       // @todo: save heatmap & flush currentPageData && currentScroll
@@ -26,6 +28,7 @@ module.exports = function(control) {
       resolution.height = newResolution.screen_height;
     },
     exit : function() {
+      control.hardware.eyeTracker.release();
       // @todo: save heatmap & flush all data
     },
     flushData : function() {
@@ -33,6 +36,20 @@ module.exports = function(control) {
     },
     saveData : function() {
 
+    },
+    processEyeData : function(eyeData) {
+      if (!resolution.width || !resolution.height || !eyeData.prefered || eyeData.prefered.x === undefined || eyeData.prefered.y === undefined) {
+        return;
+      }
+
+      var x = Math.round(eyeData.prefered.x * resolution.width);
+      var y = Math.round(eyeData.prefered.y * resolution.height) + currentScroll;
+
+      if (x < 0 || x > resolution.width || y < 0 || y > resolution.height) {
+        return;
+      }
+
+      console.log(x, y);
     },
     dbDetailChanged : function(newData) {
       if (newData.screen_width && newData.screen_height) {
