@@ -12,9 +12,10 @@ $(function() {
       return '/tests/' + steps.testData._id + '/user/' + steps.testData.userId;
     },
     receiveMessage : function(message) {
+      // @todo: include scroll messages
       if (message && message.data && message.data.origin.indexOf(steps.testData.url) !== -1) {
-        this.saveInDb({
-          last_page_url : message.data.href          
+        serverEvents.saveInDb({
+          last_page_url : message.data.href
         });
       }
     },
