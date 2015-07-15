@@ -1,4 +1,4 @@
-module.exports = function(control, tests) {
+module.exports = function(control, tests, heatmaps) {
   'use strict';
 
   control.hardware.listener.onGazeData = function(gazeData) {
@@ -15,6 +15,9 @@ module.exports = function(control, tests) {
   var subscribeNewUser = function(data) {
     control.client.subscribe('/tests/' + data.test_id + '/user/' + data._id, function(data) {
       console.log('user detail(s) updated:', data);
+      if (data.db) {
+        heatmaps.dbDetailChanged(data.db);
+      }
       // @todo: continue here!
     });
   };
@@ -24,6 +27,7 @@ module.exports = function(control, tests) {
       control.client.subscribe('/tests/' + data._id + '/users', function(data) {
         if (data.added) {
           subscribeNewUser(data.added);
+          heatmaps.start(data.added);
         }
       });
     });
