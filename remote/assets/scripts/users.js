@@ -1,4 +1,4 @@
-module.exports = ['$rootScope', '$resource', 'CommonServers', 'CommonTests', function($rootScope, $resource, CommonServers, CommonTests) {
+module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'CommonTests', function($rootScope, $timeout, $resource, CommonServers, CommonTests) {
   'use strict';
   var self = this,
     angular = require('angular');
@@ -40,7 +40,11 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', 'CommonTests', fun
     });
 
     CommonServers.fayeClient.subscribe('/tests/' + id + '/users', function(data) {
-      // do sth
+      if (data.added && !self.busy) {
+        $timeout(function() {
+          self.items.push(data.added);
+        }, 0, true);
+      }
     });
   });
 
