@@ -13,4 +13,11 @@ if (window.parent) {
         href : document.location.href,
         origin : document.location.origin
     }, '*');
+    
+    window.addEventListener('scroll', function() {
+        window.parent.postMessage({
+            scroll : document.documentElement.scrollTop || document.body.scrollTop,
+            origin : document.location.origin
+        }, '*');
+    });
 }

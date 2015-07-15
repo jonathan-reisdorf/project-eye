@@ -46,6 +46,11 @@ module.exports = function(control) {
       if (newData.last_page_url) {
         this.changePage(newData.last_page_url);
       }
+    },
+    temporaryDetailChanged : function(newData) {
+      if (typeof newData.scroll !== 'undefined') {
+        currentScroll = parseInt(newData.scroll);
+      }
     }
   }
 

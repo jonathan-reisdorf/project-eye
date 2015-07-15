@@ -12,24 +12,36 @@ $(function() {
       return '/tests/' + steps.testData._id + '/user/' + steps.testData.userId;
     },
     receiveMessage : function(message) {
-      // @todo: include scroll messages
       if (message && message.data && message.data.origin.indexOf(steps.testData.url) !== -1) {
-        serverEvents.saveInDb({
-          last_page_url : message.data.href
-        });
+        if (message.data.href) {
+          serverEvents.saveInDb({
+            last_page_url : message.data.href
+          });
+        }
+
+        if (typeof message.data.scroll !== 'undefined') {
+          serverEvents.publishTemporaryData({
+            scroll : message.data.scroll
+          });
+        }
       }
     },
     startConnection : function() {
       window.addEventListener('message', this.receiveMessage);
       this.saveInDb({
         screen_width : window.screen.width,
-        screen_height : window.screen.height          
+        screen_height : window.screen.height
       });
     },
     stopConnection : function() {
       window.removeEventListener('message', this.receiveMessage);
       this.saveInDb({
-        is_running : false          
+        is_running : false
+      });
+    },
+    publishTemporaryData : function(data) {
+      this.client.publish(this.getUserUrl(), {
+        temporary : data
       });
     },
     saveInDb : function(data) {

@@ -15,8 +15,13 @@ module.exports = function(control, tests, heatmaps) {
   var subscribeNewUser = function(data) {
     control.client.subscribe('/tests/' + data.test_id + '/user/' + data._id, function(data) {
       console.log('user detail(s) updated:', data);
+
       if (data.db) {
         heatmaps.dbDetailChanged(data.db);
+      }
+
+      if (data.temporary) {
+        heatmaps.temporaryDetailChanged(data.temporary);
       }
       // @todo: continue here!
     });
