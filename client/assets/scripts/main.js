@@ -48,6 +48,10 @@ $(function() {
       this.client.publish(this.getUserUrl(), {
         db : data
       });
+
+      this.client.publish('/tests/' + steps.testData._id + '/users', {
+        changed : steps.testData.userId
+      });
     },
     addUser : function(data) {
       this.client.publish('/tests/' + steps.testData._id + '/users', {

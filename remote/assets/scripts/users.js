@@ -45,6 +45,11 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
           self.items.push(data.added);
         }, 0, true);
       }
+
+      if (data.changed && data.changed !== self.active && !self.busy) {
+        console.log('changed un-selected user ' + data.changed);
+        // @todo: update un-selected user
+      }
     });
   });
 
@@ -76,12 +81,15 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
     onRunningTest : function(testId, user) {
       if (!user) { return; }
 
-      CommonServers.fayeClient.subscribe('/tests/' + CommonTests.active + '/user/' + user._id, function(data) {
-        console.log('received data!', data);
-      });
+      self.dataRunning = user;
 
-      console.log(user);
-      self.dataRunning = angular.copy(user);
+      CommonServers.fayeClient.subscribe('/tests/' + CommonTests.active + '/user/' + user._id, function(data) {
+        if (data && data.db) {
+          $timeout(function() {
+            angular.extend(self.dataRunning, data.db);            
+          }, 0, true);
+        }
+      });
     },
     onFinishedTest : function(testId, user) {
       if (!user) { return; }
