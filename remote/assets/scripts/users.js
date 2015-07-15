@@ -89,6 +89,12 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
             angular.extend(self.dataRunning, data.db);            
           }, 0, true);
         }
+
+        if (data && typeof data.eye !== 'undefined') {
+          $timeout(function() {
+            self.dataRunning.eye = data.eye;
+          }, 0, true);
+        }
       });
     },
     onFinishedTest : function(testId, user) {

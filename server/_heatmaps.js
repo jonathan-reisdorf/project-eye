@@ -13,10 +13,11 @@ module.exports = function(control) {
       }
 
       currentScroll = 0;
+      resolution = {};
       profileData.user_id = userData._id;
       currentPageData.url = userData.last_page_url;
       currentPageData.map_history = [];
-      currentPageData.map_accumulated = [];
+      currentPageData.map_accumulated = {};
 
       control.hardware.eyeTracker.start();
     },
@@ -29,6 +30,7 @@ module.exports = function(control) {
     },
     exit : function() {
       control.hardware.eyeTracker.release();
+      // @todo: solve application freezing on eyetracker release
       // @todo: save heatmap & flush all data
     },
     flushData : function() {
@@ -39,17 +41,21 @@ module.exports = function(control) {
     },
     processEyeData : function(eyeData) {
       if (!resolution.width || !resolution.height || !eyeData.prefered || eyeData.prefered.x === undefined || eyeData.prefered.y === undefined) {
-        return;
+        return null;
       }
 
       var x = Math.round(eyeData.prefered.x * resolution.width);
       var y = Math.round(eyeData.prefered.y * resolution.height) + currentScroll;
 
       if (x < 0 || x > resolution.width || y < 0 || y > resolution.height) {
-        return;
+        return null;
       }
 
-      console.log(x, y);
+      var coords = [x, y];
+      currentPageData.map_history.push(coords);
+      currentPageData.map_accumulated[coords.join(',')] = (currentPageData.map_accumulated[coords.join(',')] || 0) + 1;
+
+      return coords;
     },
     dbDetailChanged : function(newData) {
       if (newData.screen_width && newData.screen_height) {

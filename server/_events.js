@@ -1,11 +1,6 @@
 module.exports = function(control, tests, heatmaps) {
   'use strict';
 
-  control.hardware.listener.onGazeData = function(gazeData) {
-    // console.log('\033[2J');
-    heatmaps.processEyeData(gazeData);
-  };
-
   control.server.get('/tools/calibrate', function(req, res) {
     var exec = require('child_process').exec;
     exec('calibrate.cmd');
@@ -35,6 +30,13 @@ module.exports = function(control, tests, heatmaps) {
         heatmaps.temporaryDetailChanged(userData.temporary);
       }
     });
+
+    control.hardware.listener.onGazeData = function(gazeData) {
+      var coords = heatmaps.processEyeData(gazeData);
+      control.client.publish('/tests/' + data.test_id + '/user/' + data._id, {
+        eye : coords
+      });
+    };
   };
 
   tests.testsDb.db.open(function() {
