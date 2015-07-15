@@ -3,8 +3,7 @@
 var mongo = require('mongodb');
 
 var Server = mongo.Server,
-Db = mongo.Db,
-BSON = mongo.BSONPure;
+Db = mongo.Db;
 
 var server = new Server('localhost', 27017, {auto_reconnect: true});
 var db = new Db('eyetracking', server);
@@ -69,12 +68,12 @@ exports.generic = function(collectionName, server) {
     });
   };
 
-  expose.update = function(req, res) {
+  expose.update = function(req, res, incrementally) {
     var id = req.params.id;
     var item = req.body;
+    item = incrementally ? { $set : item } : item;
     console.log('Updating ' + collectionName + ': ' + id);
-    console.log(JSON.stringify(item));
-    expose.collection.update({'_id':new BSON.ObjectID(id)}, item, {safe:true}, function(err, result) {
+    expose.collection.update({ '_id' : mongo.ObjectID(id) }, item, {safe:true}, function(err, result) {
       if (err) {
         console.log('Error updating ' + collectionName + ': ' + err);
         res.send({'error':'An error has occurred'});
@@ -88,7 +87,7 @@ exports.generic = function(collectionName, server) {
   expose.delete = function(req, res) {
     var id = req.params.id;
     console.log('Deleting ' + collectionName + ': ' + id);
-    expose.collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
+    expose.collection.remove({ '_id' : mongo.ObjectID(id) }, {safe:true}, function(err, result) {
       if (err) {
         res.send({'error':'An error has occurred - ' + err});
       } else {
