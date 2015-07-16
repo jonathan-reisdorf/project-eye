@@ -50,7 +50,9 @@ module.exports = function(control, tests) {
           user_id : profileData.user_id,
           url : currentPageData.url,
           accumulated : convertedAccumulation,
-          history : [].concat(currentPageData.map_history)
+          history : [].concat(currentPageData.map_history),
+          screen_width : resolution.width,
+          screen_height : resolution.height
         };
 
       tests.heatmapsDb.db.open(function() {
