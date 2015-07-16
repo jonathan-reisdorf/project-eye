@@ -19,7 +19,7 @@ module.exports = function(control) {
       currentPageData.map_history = [];
       currentPageData.map_accumulated = {};
 
-      control.hardware.eyeTracker.start();
+      control.hardware.getEyeTracker().start();
     },
     changePage : function(newUrl) {
       // @todo: save heatmap & flush currentPageData && currentScroll
@@ -29,8 +29,7 @@ module.exports = function(control) {
       resolution.height = newResolution.screen_height;
     },
     exit : function() {
-      control.hardware.eyeTracker.release();
-      // @todo: solve application freezing on eyetracker release
+      control.hardware.resetEyetracker();
       // @todo: save heatmap & flush all data
     },
     flushData : function() {
