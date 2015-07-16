@@ -10,4 +10,5 @@ application
   .factory('CommonServers', require('./servers'))
   .factory('CommonTests', require('./tests'))
   .factory('CommonUsers', require('./users'))
+  .factory('CommonHeatmaps', require('./heatmaps'))
   .controller('AppCtrl', require('./app'));

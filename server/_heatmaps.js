@@ -8,22 +8,15 @@ module.exports = function(control, tests) {
 
   var actions = {
     start : function(userData) {
-      if (currentPageData.user_id) {
-        currentPageData = {};
-      }
-
-      currentScroll = 0;
-      resolution = {};
+      this.flushData(true);
       profileData.user_id = userData._id;
       currentPageData.url = userData.last_page_url;
-      currentPageData.map_history = [];
-      currentPageData.map_accumulated = {};
 
       control.hardware.getEyeTracker().start();
     },
     changePage : function(newUrl) {
       this.saveData();
-      this.flushData();
+      this.flushData(false);
       currentPageData.url = newUrl;
     },
     changeResolution : function(newResolution) {
@@ -33,15 +26,20 @@ module.exports = function(control, tests) {
     exit : function() {
       control.hardware.resetEyetracker();
       this.saveData();
-      this.flushData();
+      this.flushData(true);
     },
-    flushData : function() {
+    flushData : function(everything) {
       currentPageData = {
         map_history : [],
         map_accumulated : {}
       };
 
       currentScroll = 0;
+
+      if (everything) {
+        resolution = {};
+        profileData = {};
+      }
     },
     saveData : function() {
       var convertedAccumulation = Object.keys(currentPageData.map_accumulated).map(function(coordString) {

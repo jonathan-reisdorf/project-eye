@@ -11,6 +11,7 @@ module.exports = function(control) {
 
   // SCHEMA: _id, user_id, url, accumulated, history
   var heatmapsDbMethods = db.generic('heatmaps', control.server);
+  control.server.get('/users/:user_id/heatmaps', heatmapsDbMethods.findBy);
 
   return {
     testsDb : testsDbMethods,

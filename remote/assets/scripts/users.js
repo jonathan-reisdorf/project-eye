@@ -1,7 +1,8 @@
-module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'CommonTests', function($rootScope, $timeout, $resource, CommonServers, CommonTests) {
+module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'CommonTests', 'CommonHeatmaps', function($rootScope, $timeout, $resource, CommonServers, CommonTests, CommonHeatmaps) {
   'use strict';
   var self = this,
     angular = require('angular');
+
   var usersResource = function() {
     return $resource('http://' + CommonServers.active + '/tests/:testId/users');
   };
@@ -97,6 +98,7 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
       if (!user) { return; }
 
       self.dataRunning = user;
+      CommonHeatmaps.unload();
 
       CommonServers.fayeClient.subscribe('/tests/' + CommonTests.active + '/user/' + user._id, function(data) {
         if (data && data.db) {
@@ -116,7 +118,9 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
       if (!user) { return; }
 
       self.dataRunning = null;
-      // show heatmap
+
+      CommonHeatmaps.init();
+      CommonHeatmaps.load(user._id);
     }
   };
 
