@@ -1,0 +1,23 @@
+.control {
+  position:fixed;
+  bottom:$_sBig;
+  margin-left:$_wSidebar;
+  left: 50%;
+  transform:translateX(-50%);
+  background:$_cTranspDarkMajor;
+  color:$_cTextSidebar;
+  padding:$_sDefault;
+  border-radius:$_sDefault / 2;
+  white-space:nowrap;
+  z-index:2;
+
+  &__item {
+    display:inline-block;
+    margin:0 $_sDefault;
+
+    &--label {
+      margin-bottom:$_sDefault / 2;
+      line-height:1;
+    }
+  }
+}
