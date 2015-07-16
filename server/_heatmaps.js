@@ -43,7 +43,9 @@ module.exports = function(control, tests) {
     },
     saveData : function() {
       var convertedAccumulation = Object.keys(currentPageData.map_accumulated).map(function(coordString) {
-        return coordString.split(',').concat(currentPageData.map_accumulated[coordString]);
+        return coordString.split(',').map(function(part) {
+          return parseInt(part);
+        }).concat(currentPageData.map_accumulated[coordString]);
       });
 
       var result = {

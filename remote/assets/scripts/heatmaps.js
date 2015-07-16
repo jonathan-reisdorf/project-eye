@@ -1,4 +1,4 @@
-module.exports = ['$rootScope', '$resource', 'CommonServers', function($rootScope, $resource, CommonServers) {
+module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', function($rootScope, $timeout, $resource, CommonServers) {
   'use strict';
   var self = this,
     angular = require('angular');
@@ -10,15 +10,13 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', function($rootScop
 
   self.items = [];
   self.active = null;
-  self.heat = null;
 
   self.config = {
     radius : 25,
-    blur : 0
+    blur : 10
   };
 
   self.init = function() {
-    self.heat = simpleheat('canvas');
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     self.unload();
   };
@@ -45,24 +43,7 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', function($rootScop
     }
 
     self.active = heatmapItem;
-    self.active.screen_width = 1920; // debug
-    self.active.screen_height = 1080; // debug
     self.active.last_page_url = heatmapItem.url;
-
-    self.heat.data(self.active.accumulated);
-    self.heat.radius(+self.config.radius, +self.config.blur);
-  };
-
-  self.render = function() {
-    console.time('draw');
-    self.heat.draw();
-    console.timeEnd('draw');
-    self.animationFrame = null;
-  };
-
-  self.adjust = function() {
-    self.heat.radius(+self.config.radius, +self.config.blur);
-    self.animationFrame = self.animationFrame || window.requestAnimationFrame(self.render);
   };
 
   return self;
