@@ -1,4 +1,4 @@
-module.exports = function(control) {
+module.exports = function(control, tests) {
   'use strict';
 
   var currentPageData = {};
@@ -22,7 +22,9 @@ module.exports = function(control) {
       control.hardware.getEyeTracker().start();
     },
     changePage : function(newUrl) {
-      // @todo: save heatmap & flush currentPageData && currentScroll
+      this.saveData();
+      this.flushData();
+      currentPageData.url = newUrl;
     },
     changeResolution : function(newResolution) {
       resolution.width = newResolution.screen_width;
@@ -30,16 +32,39 @@ module.exports = function(control) {
     },
     exit : function() {
       control.hardware.resetEyetracker();
-      // @todo: save heatmap & flush all data
+      this.saveData();
+      this.flushData();
     },
     flushData : function() {
+      currentPageData = {
+        map_history : [],
+        map_accumulated : {}
+      };
 
+      currentScroll = 0;
     },
     saveData : function() {
+      var convertedAccumulation = Object.keys(currentPageData.map_accumulated).map(function(coordString) {
+        return coordString.split(',').concat(currentPageData.map_accumulated[coordString]);
+      });
 
+      var result = {
+          user_id : profileData.user_id,
+          url : currentPageData.url,
+          accumulated : convertedAccumulation,
+          history : [].concat(currentPageData.map_history)
+        };
+
+      tests.heatmapsDb.db.open(function() {
+        tests.heatmapsDb.add({
+          body : result
+        }, {
+          send : function() {}
+        });
+      });
     },
     processEyeData : function(eyeData) {
-      if (!resolution.width || !resolution.height || !eyeData.prefered || eyeData.prefered.x === undefined || eyeData.prefered.y === undefined) {
+      if (!currentPageData.url || !resolution.width || !resolution.height || !eyeData.prefered || eyeData.prefered.x === undefined || eyeData.prefered.y === undefined) {
         return null;
       }
 
