@@ -42,10 +42,14 @@ module.exports = function(control, tests) {
       }
     },
     saveData : function() {
+      var maxDepth = 0;
       var convertedAccumulation = Object.keys(currentPageData.map_accumulated).map(function(coordString) {
+        var depth = currentPageData.map_accumulated[coordString];
+        maxDepth = depth > maxDepth ? depth : maxDepth;
+
         return coordString.split(',').map(function(part) {
           return parseInt(part);
-        }).concat(currentPageData.map_accumulated[coordString]);
+        }).concat(depth);
       });
 
       var result = {
@@ -54,7 +58,8 @@ module.exports = function(control, tests) {
           accumulated : convertedAccumulation,
           history : [].concat(currentPageData.map_history),
           screen_width : resolution.width,
-          screen_height : resolution.height
+          screen_height : resolution.height,
+          accumulated_depth : maxDepth
         };
 
       tests.heatmapsDb.db.open(function() {

@@ -53,7 +53,7 @@ module.exports = function(application) {
               animationFrame = animationFrame || window.requestAnimationFrame(render);
             },
             updatedData = function(data) {
-              heat.data(data.accumulated);
+              heat.data(data.accumulated).max(data.accumulated_depth);
               adjust();
             };
 

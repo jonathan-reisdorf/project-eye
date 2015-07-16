@@ -9,7 +9,7 @@ module.exports = function(control) {
   var usersDbMethods = db.generic('users', control.server);
   control.server.get('/tests/:test_id/users', usersDbMethods.findBy);
 
-  // SCHEMA: _id, user_id, url, accumulated, history, screen_width, screen_height
+  // SCHEMA: _id, user_id, url, accumulated, accumulated_depth, history, screen_width, screen_height
   var heatmapsDbMethods = db.generic('heatmaps', control.server);
   control.server.get('/users/:user_id/heatmaps', heatmapsDbMethods.findBy);
 

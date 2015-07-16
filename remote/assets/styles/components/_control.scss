@@ -19,5 +19,9 @@
       margin-bottom:$_sDefault / 2;
       line-height:1;
     }
+
+    select {
+      max-width:300px;
+    }
   }
 }
