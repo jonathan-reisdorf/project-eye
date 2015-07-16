@@ -25,7 +25,7 @@
 
     <div class="sidebar__caption" ng-if="app.servers.connectionStatus === 'up'">Users</div>
     <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.users.busy }" ng-if="app.servers.connectionStatus === 'up'">
-      <li ng-repeat="user in app.users.items" ng-class="{ active : app.users.active === user._id }" ng-click="app.users.setActive(user._id)">
+      <li ng-repeat="user in app.users.items" ng-class="{ active : app.users.active === user._id, 'sidebar__list--disabled' : user.busy }" ng-click="app.users.setActive(user)">
         <span ng-bind="user.name"></span>
         <span ng-if="user.is_running">
           &#160;

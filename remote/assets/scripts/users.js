@@ -2,15 +2,18 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
   'use strict';
   var self = this,
     angular = require('angular');
-  var usersResource = function(testId) {
-    return $resource('http://' + CommonServers.active + '/tests/' + testId + '/users');
+  var usersResource = function() {
+    return $resource('http://' + CommonServers.active + '/tests/:testId/users');
+  };
+  var userResource = function() {
+    return $resource('http://' + CommonServers.active + '/users/:userId');
   };
 
   self.items = [];
   self.busy = false;
 
-  self.setActive = function(id) {
-    if (self.busy || !CommonTests.active) {
+  self.setActive = function(user) {
+    if (self.busy || user.busy || !CommonTests.active) {
       return;
     }
 
@@ -18,8 +21,8 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
       CommonServers.fayeClient.unsubscribe('/tests/' + CommonTests.active + '/user/' + self.active);
     }
 
-    self.active = id;
-    self.events.onInit(id);
+    self.active = user._id;
+    self.events.onInit(user._id);
   };
 
   $rootScope.$on('server:disconnected', function() {
@@ -34,7 +37,7 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
   $rootScope.$on('test:selected', function(e, id) {
     self.busy = true;
 
-    self.items = usersResource(id).query();
+    self.items = usersResource().query({ testId : id });
     self.items.$promise.then(function() {
       self.busy = false;
     });
@@ -47,8 +50,20 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
       }
 
       if (data.changed && data.changed !== self.active && !self.busy) {
-        console.log('changed un-selected user ' + data.changed);
-        // @todo: update un-selected user
+        var userReference = self.items.filter(function(userItem) {
+          return userItem._id === data.changed;
+        })[0];
+
+        if (!userReference) { return; }
+        $timeout(function() {
+          userReference.busy = true;
+        }, 0, true);
+
+        $timeout(function() {
+          userResource().get({ userId : data.changed }, function(userData) {
+            angular.extend(userReference, userData, { busy : false });
+          });
+        }, 500, false);
       }
     });
   });
@@ -86,7 +101,7 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', 'Commo
       CommonServers.fayeClient.subscribe('/tests/' + CommonTests.active + '/user/' + user._id, function(data) {
         if (data && data.db) {
           $timeout(function() {
-            angular.extend(self.dataRunning, data.db);            
+            angular.extend(self.dataRunning, data.db);
           }, 0, true);
         }
 
