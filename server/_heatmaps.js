@@ -1,10 +1,11 @@
 module.exports = function(control, tests) {
   'use strict';
 
-  var currentPageData = {};
-  var profileData = {};
-  var currentScroll = 0;
-  var resolution = {};
+  var currentPageData = {},
+    profileData = {},
+    currentScroll = 0,
+    lastEyeContact = 0,
+    resolution = {};
 
   var actions = {
     start : function(userData) {
@@ -35,6 +36,7 @@ module.exports = function(control, tests) {
       };
 
       currentScroll = 0;
+      lastEyeContact = 0;
 
       if (everything) {
         resolution = {};
@@ -77,13 +79,16 @@ module.exports = function(control, tests) {
 
       var x = Math.round(eyeData.prefered.x * resolution.width);
       var y = Math.round(eyeData.prefered.y * resolution.height) + currentScroll;
+      var delay = (lastEyeContact ? (eyeData.timeSeconds - lastEyeContact) : 0) * 1000;
+      delay = delay < 0 ? 0 : delay; // this covers a potential edge case that has not even been produced yet
+      lastEyeContact = eyeData.timeSeconds;
 
       if (x < 0 || x > resolution.width || y < 0 || y > resolution.height) {
         return null;
       }
 
       var coords = [x, y];
-      currentPageData.map_history.push(coords);
+      currentPageData.map_history.push(coords.concat(delay));
       currentPageData.map_accumulated[coords.join(',')] = (currentPageData.map_accumulated[coords.join(',')] || 0) + 1;
 
       return coords;

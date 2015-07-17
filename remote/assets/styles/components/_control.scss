@@ -1,7 +1,7 @@
 .control {
   position:fixed;
   bottom:$_sBig;
-  left: ($_wSidebar + $_sBig);
+  right:$_sBig;
   background:$_cTranspDarkMajor;
   color:$_cTextSidebar;
   padding:$_sDefault;
