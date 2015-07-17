@@ -1,9 +1,7 @@
 .control {
   position:fixed;
   bottom:$_sBig;
-  margin-left:$_wSidebar;
-  left: 50%;
-  transform:translateX(-50%);
+  left: ($_wSidebar + $_sBig);
   background:$_cTranspDarkMajor;
   color:$_cTextSidebar;
   padding:$_sDefault;
@@ -14,6 +12,7 @@
   &__item {
     display:inline-block;
     margin:0 $_sDefault;
+    line-height:32px;
 
     &--label {
       margin-bottom:$_sDefault / 2;
@@ -22,6 +21,20 @@
 
     select {
       max-width:300px;
+      background:transparent;
+      border:1px solid $_cBackgroundFrame;
+      padding:$_sDefault / 2;
+      color:$_cBackgroundFrame;
+      cursor:pointer;
+      appearance:none;
+
+      option {
+        background:$_cTranspDarkMajor;
+      }
+    }
+
+    input[type="range"] {
+      vertical-align:middle;
     }
   }
 }
