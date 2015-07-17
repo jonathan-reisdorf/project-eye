@@ -1,10 +1,17 @@
 @echo off
+
+echo Updating all dependencies...
+
 cd server
-call npm update --save
+call start npm update --save
+
 cd gazejs
-call npm update  --save
+call start npm update --save
+
 cd ..\..\remote
-call npm update --save
+call start npm update --save
+
 cd ..\client
-call npm update --save
+call start npm update --save
+
 cd ..
