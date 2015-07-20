@@ -1,3 +1,5 @@
+![Project Eye Logo](logo.svg)
+
 # Pre-Requirements
 
 In order to start, you need the following Hard- / Software:
