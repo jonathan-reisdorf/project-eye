@@ -1,4 +1,4 @@
-![Project Eye Logo](logo.svg)
+![Project Eye Logo](https://raw.githubusercontent.com/project-a/project-eye/master/logo.svg?token=AIiyoCkKkTfOY12TqBxILbKZYsCs2e0jks5VthxSwA%3D%3D)
 
 # Pre-Requirements
 
