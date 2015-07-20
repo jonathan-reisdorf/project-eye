@@ -1,0 +1,77 @@
+.sidebar {
+  display:block;
+  background:$_cBackgroundSidebar;
+  min-height:100%;
+  box-sizing:border-box;
+  width:$_wSidebar;
+  color:$_cTextSidebar;
+  float:left;
+  box-shadow:inset -10px 0 10px $_cTranspDarkMinor;
+
+  &__caption {
+    margin-top:$_sDefault * 4;
+    font-weight:300;
+    color:$_cTextSidebarCaption;
+    background:$_cTranspDarkDecent;
+    padding:$_sDefault;
+    text-transform:uppercase;
+
+    &:first-child {
+      margin-top:0;
+    }
+  }
+
+  &__list {
+    list-style:none outside;
+    margin:0;
+    padding:0;
+
+    li {
+      margin:0;
+      padding:$_sDefault;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      border-bottom:1px solid $_cTranspDarkMinor;
+
+      .fa-times {
+        float:right;
+        padding:$_sMinor;
+        color:$_cTextSidebarCaption;
+
+        &:hover {
+          color:$_cTextSidebar;
+        }
+      }
+    }
+
+    &--switcher {
+      transition:opacity 0.3s;
+      user-select:none;
+
+      li {
+        transition:all 0.3s;
+        cursor:pointer;
+
+        &.add {
+          color:$_cTextSidebarCaption;
+          font-weight:600;
+        }
+
+        &.active {
+          border-left:3px solid $_cActive;
+          color:$_cActive;
+        }
+      }
+    }
+
+    &--disabled {
+      cursor:wait;
+      opacity:0.5;
+
+      li {
+        cursor:wait;
+      }
+    }
+  }
+}

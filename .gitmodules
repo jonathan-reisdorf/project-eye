@@ -1,0 +1,3 @@
+[submodule "server/gazejs"]
+	path = server/gazejs
+	url = https://github.com/jiahansu/GazeJS.git

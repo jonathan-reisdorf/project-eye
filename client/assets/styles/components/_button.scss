@@ -1,0 +1,18 @@
+button {
+  transition:opacity $_tFast;
+  padding:10px 20px;
+  cursor:pointer;
+  color:$_cTextContinue;
+  border:0 none;
+  background:$_cTextDefault;
+  border-radius:$_brNormal;
+
+  &.inline {
+    margin-left:$_sNormal;
+  }
+
+  &[disabled] {
+    opacity:0.7;
+    cursor:not-allowed;
+  }
+}

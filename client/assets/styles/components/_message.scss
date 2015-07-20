@@ -1,0 +1,18 @@
+.message {
+  font-size:$_fsMessage;
+  line-height:2em;
+  text-align:center;
+  transform:translateY(-50%) translateX(-50%);
+  top:50%;
+  left:50%;
+  position:absolute;
+  max-width:$_wMaxParagraph;
+  padding:$_sBig;
+  color:$_cTextDefault;
+  box-sizing:border-box;
+  z-index:0;
+
+  &-wide {
+    max-width:$_wMaxParagraph * 2;
+  }
+}

@@ -1,0 +1,29 @@
+$_fsDefault : 13px;
+$_fsIcon : 32px;
+$_fsMessage : 48px;
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+$_ffDefault : 'Open Sans', Helvetica, Arial, sans-serif;
+
+$_cBackgroundPage : #eee;
+$_cBackgroundFrame : #fff;
+$_cBackgroundSidebar : #444;
+
+$_cTextDefault : #333;
+$_cTextSidebar : #fff;
+$_cTextSidebarCaption : #ccc;
+$_cTextGray : #999;
+
+$_cBorderLight : #ccc;
+
+$_cActive : #caff00;
+
+$_cTranspDarkMinor : rgba(0, 0, 0, 0.1);
+$_cTranspDarkDecent : rgba(0, 0, 0, 0.2);
+$_cTranspDarkMajor : rgba(0, 0, 0, 0.8);
+
+$_sMinor : 2px;
+$_sDefault : 10px;
+$_sBig : 50px;
+
+$_wSidebar : 250px;
