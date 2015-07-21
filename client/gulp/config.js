@@ -16,7 +16,9 @@ var config = {
             root : PUBLIC_DIR,
             scripts : PUBLIC_DIR + 'scripts'
         }
-    }
+    },
+    serverPort : 7778,
+    showBrowserOnSecondaryScreen : true
 };
 
 module.exports = config;
