@@ -5,12 +5,14 @@ module.exports = function(control, tests) {
     profileData = {},
     currentScroll = 0,
     lastEyeContact = 0,
+    eyeLocked = false,
     resolution = {};
 
   var actions = {
     start : function(userData) {
       this.flushData(true);
       profileData.user_id = userData._id;
+      profileData.test_id = userData.test_id;
       currentPageData.url = userData.last_page_url;
 
       control.hardware.getEyeTracker().start();
@@ -41,6 +43,7 @@ module.exports = function(control, tests) {
       if (everything) {
         resolution = {};
         profileData = {};
+        eyeLocked = false;
       }
     },
     saveData : function() {
@@ -73,7 +76,13 @@ module.exports = function(control, tests) {
       });
     },
     processEyeData : function(eyeData) {
+      if (eyeLocked) { return null; }
       if (!currentPageData.url || !resolution.width || !resolution.height || !eyeData.prefered || eyeData.prefered.x === undefined || eyeData.prefered.y === undefined) {
+        if (lastEyeContact && eyeData.timeSeconds && eyeData.timeSeconds - lastEyeContact > 7 && actions.onFinishedTest) {
+          eyeLocked = true;
+          actions.onFinishedTest(profileData);
+        }
+
         return null;
       }
 

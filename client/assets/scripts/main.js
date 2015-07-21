@@ -11,6 +11,24 @@ $(function() {
     getUserUrl : function() {
       return '/tests/' + steps.testData._id + '/user/' + steps.testData.userId;
     },
+    subscribe : function() {
+      this.client.subscribe(this.getUserUrl(), function(message) {
+        if (message.server && message.server.finishedTest) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+        }
+      });
+    },
+    unsubscribe : function() {
+      this.client.unsubscribe(this.getUserUrl());
+    },
     receiveMessage : function(message) {
       if (message && message.data && message.data.origin.indexOf(steps.testData.url) !== -1) {
         if (message.data.href) {
@@ -28,6 +46,7 @@ $(function() {
     },
     startConnection : function() {
       window.addEventListener('message', this.receiveMessage);
+      this.subscribe();
       this.saveInDb({
         screen_width : window.screen.width,
         screen_height : window.screen.height
@@ -35,6 +54,7 @@ $(function() {
     },
     stopConnection : function() {
       window.removeEventListener('message', this.receiveMessage);
+      this.unsubscribe();
       this.saveInDb({
         is_running : false
       });

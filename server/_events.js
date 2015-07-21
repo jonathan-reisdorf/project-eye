@@ -7,6 +7,14 @@ module.exports = function(control, tests, heatmaps) {
     res.send('OK');
   });
 
+  heatmaps.onFinishedTest = function(data) {
+      control.client.publish('/tests/' + data.test_id + '/user/' + data.user_id, {
+        server : {
+          finishedTest : true
+        }
+      });
+  };
+
   var subscribeNewUser = function(data) {
     control.client.subscribe('/tests/' + data.test_id + '/user/' + data._id, function(userData) {
       if (userData.db) {
