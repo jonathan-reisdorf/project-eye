@@ -18,7 +18,8 @@ In order to start, you need the following Hard- / Software:
 - Node.js
 
 ## For the Client User Script
-- Chrome Browser and Tampermonkey Add-On or Firefox Browser and Greasemonkey (untested yet)
+- Chrome Browser and Tampermonkey Add-On or Firefox Browser and Greasemonkey
+- alternatively: there's a new zip file (client/CustomizedFF.zip) that contains a portable FireFox that already has Greasemonkey and the user script installed and running, as well as some additional settings -- use it to quickly get started
 
 
 # Initial Run:
@@ -59,12 +60,11 @@ gulp start
 ```
 
 
-## Client User Script
+## Client User Script (only if you don't use the CustomizedFF.zip file)
 
-Install the Add-On in Tampermonkey or Greasemonkey and activate it
+Install the user script in Tampermonkey or Greasemonkey and activate it (it's in the client/userscript folder)
 
 
 # How to use as a developer
 
 Once the initial run has been done, you can simply call `start_everything.cmd` to get everything started and running.
-
