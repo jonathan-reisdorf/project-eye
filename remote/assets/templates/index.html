@@ -60,7 +60,7 @@
     </div>
 
     <div class="test__container" ng-if="app.servers.connectionStatus === 'up' && app.users.active && ((app.users.dataRunning && app.users.dataRunning.is_running) || app.heatmaps.active)" ng-style="{ width : ((app.users.dataRunning || app.heatmaps.active).screen_width || 0) + 'px', height : ((app.users.dataRunning || app.heatmaps.active).screen_height || 0) + 'px' }">
-      <iframe class="frame" ng-src="{{ (app.users.dataRunning || app.heatmaps.active).last_page_url | rawSrc }}"></iframe>
+      <iframe class="frame" sandbox="" ng-src="{{ (app.users.dataRunning || app.heatmaps.active).last_page_url | rawSrc }}"></iframe>
       <div class="frame__overlay">
         <div class="eye__current" ng-if="(app.users.dataRunning || app.heatmaps.active || {}).eye" ng-style="{ left : (app.users.dataRunning || app.heatmaps.active).eye[0] + 'px', top : (app.users.dataRunning || app.heatmaps.active).eye[1] + 'px'  }"></div>
         <canvas id="heatmapCanvas" ng-if="app.heatmaps.active" heatmap="{ active : app.heatmaps.active, config : app.heatmaps.config }"></canvas>
