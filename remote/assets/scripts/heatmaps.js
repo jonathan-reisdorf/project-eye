@@ -44,6 +44,7 @@ module.exports = ['$rootScope', '$timeout', '$resource', 'CommonServers', functi
 
     self.active = heatmapItem;
     self.active.last_page_url = heatmapItem.url;
+    self.active.eye = false;
   };
 
   self.toggleReplay = function() {
