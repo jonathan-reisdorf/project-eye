@@ -35,6 +35,7 @@ cd gazejs
 npm install
 cd ..
 npm install
+mkdir \data
 call start start_mongod.cmd
 node server.js
 ```
