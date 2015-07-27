@@ -22,9 +22,9 @@
     select {
       max-width:300px;
       background:transparent;
-      border:1px solid $_cBackgroundFrame;
+      border:1px solid $_cBackgroundWhite;
       padding:$_sDefault / 2;
-      color:$_cBackgroundFrame;
+      color:$_cBackgroundWhite;
       cursor:pointer;
       appearance:none;
 

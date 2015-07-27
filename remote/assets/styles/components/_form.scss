@@ -1,0 +1,50 @@
+.form {
+  padding:$_sBig;
+  font-size:$_fsForm;
+
+  &__row {
+    width:50%;
+    min-width:300px;
+    margin-bottom:$_sBig;
+
+    &:last-child {
+      margin-bottom:0;
+    }
+  }
+
+  &__label {
+    display:block;
+    margin-bottom:$_sDefault;
+  }
+
+  &__input {
+    border:0 none;
+    background:$_cBackgroundWhite;
+    padding:$_sDefault;
+    width:100%;
+    min-height:26px;
+    resize:vertical;
+    box-sizing:border-box;
+
+    &:invalid {
+      box-shadow:none;
+      outline:none;
+    }
+  }
+
+  &__button {
+    transition:opacity $_tFast;
+    padding:$_sDefault ($_sDefault * 2);
+    cursor:pointer;
+    color:$_cActive;
+    border:0 none;
+    background:$_cTextDefault;
+    border-radius:$_brNormal;
+    float:right;
+
+    &[disabled] {
+      opacity:0.7;
+      cursor:not-allowed;
+    }
+  }
+}

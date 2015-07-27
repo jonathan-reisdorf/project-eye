@@ -1,0 +1,21 @@
+<form class="form" name="form_test_website" ng-submit="app.tests.save(app.tests.editing)">
+  <div class="form__row">
+    <label for="test_website_name" class="form__label">Test Name</label>
+    <input ng-model="app.tests.editing.name" id="test_website_name" type="text" class="form__input" placeholder="Big Green Button Test 5" required />
+  </div>
+  <div class="form__row">
+    <label for="test_website_url" class="form__label">Entry Page URL</label>
+    <input ng-model="app.tests.editing.url" id="test_website_url" type="text" class="form__input" placeholder="http://www.project-a.com" required />
+  </div>
+  <div class="form__row">
+    <label for="test_website_description" class="form__label">Test Description</label>
+    <textarea ng-model="app.tests.editing.description" id="test_website_description" class="form__input" placeholder="Welcome to the new test!" required></textarea>
+  </div>
+  <div class="form__row">
+    <label for="test_website_intro" class="form__label">Test Intro</label>
+    <textarea ng-model="app.tests.editing.intro" id="test_website_intro" class="form__input" placeholder="Please describe a task here, e.g.: Please buy a pair of hammers of your choice. Then leave the test by hitting ESC or leaving the computer." required></textarea>
+  </div>
+  <div class="form__row">
+    <input type="submit" class="form__button" value="Save" ng-disabled="!form_test_website.$valid" />
+  </div>
+</form>

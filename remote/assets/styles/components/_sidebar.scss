@@ -16,7 +16,7 @@
     padding:$_sDefault;
     text-transform:uppercase;
 
-    &:first-child {
+    &--first {
       margin-top:0;
     }
   }
@@ -34,13 +34,17 @@
       text-overflow:ellipsis;
       border-bottom:1px solid $_cTranspDarkMinor;
 
-      .fa-times {
+      .fa {
         float:right;
         padding:$_sMinor;
         color:$_cTextSidebarCaption;
 
         &:hover {
           color:$_cTextSidebar;
+        }
+
+        &.active {
+          color:$_cActive;
         }
       }
     }

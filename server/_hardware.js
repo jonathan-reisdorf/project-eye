@@ -21,7 +21,7 @@ module.exports = (function() {
       eyeTracker.stop();
     }
 
-    eyeTracker = gazejs.createEyeTracker(gazejs.TOBII_GAZE_SDK);;
+    eyeTracker = gazejs.createEyeTracker(gazejs.TOBII_GAZE_SDK);
     eyeTracker.init();
     eyeTracker.setListener(listener);
     // console.log('Library version: ' + eyeTracker.getLibraryVersion());

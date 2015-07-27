@@ -8,80 +8,112 @@
 </head>
 <body ng-app="application" ng-controller="AppCtrl as app">
   <aside class="sidebar" ng-style="{ height : (app.users.active && (app.users.dataRunning || app.heatmaps.active) ? ((app.users.dataRunning || app.heatmaps.active).screen_height || 0) : 0) + 'px' }">
-    <div class="sidebar__caption">Servers</div>
+    <div class="sidebar__caption sidebar__caption--first">Servers</div>
     <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.servers.connectionStatus === 'connecting' }">
       <li ng-repeat="server in app.servers.items" ng-class="{ active : app.servers.active === server }" ng-click="app.servers.setActive(server)">
-        <span ng-bind="server"></span>
         <span class="fa fa-times" stop-propagation="click" ng-click="app.servers.remove(server)"></span>
+        <span ng-bind="server"></span>
       </li>
       <li class="add" ng-click="app.servers.add()">Add a server...</li>
     </ul>
 
-    <div class="sidebar__caption" ng-if="app.servers.connectionStatus === 'up'">Tests</div>
-    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.tests.busy }" ng-if="app.servers.connectionStatus === 'up'">
-      <li ng-repeat="test in app.tests.items" ng-class="{ active : app.tests.active === test._id }" ng-click="app.tests.setActive(test._id)" ng-bind="test.name"></li>
-      <li class="add" ng-click="app.tests.add()">Start a new test...</li>
-    </ul>
+    <div ng-if="app.servers.connectionStatus === 'up' && app.servers.active">
+      <div class="sidebar__caption">Tests</div>
+      <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.tests.busy }">
+        <li ng-repeat="test in app.tests.items" ng-class="{ active : app.tests.active === test._id }" ng-click="app.tests.setActive(test._id)">
+          <span class="fa fa-pencil" ng-class="{ active : app.tests.editing && app.tests.editing._id === test._id }" stop-propagation="click" ng-click="app.tests.edit(test)"></span>
+          <span ng-bind="test.name"></span>
+        </li>
+        <li class="add" ng-class="{ active : app.tests.editing && !app.tests.editing._id }" ng-click="app.tests.edit()">Start a new test...</li>
+      </ul>
 
-    <div class="sidebar__caption" ng-if="app.servers.connectionStatus === 'up'">Users</div>
-    <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.users.busy }" ng-if="app.servers.connectionStatus === 'up'">
-      <li ng-repeat="user in app.users.items" ng-class="{ active : app.users.active === user._id, 'sidebar__list--disabled' : user.busy }" ng-click="app.users.setActive(user)">
-        <span ng-bind="user.name"></span>
-        <span ng-if="user.is_running">
-          &#160;
-          <span class="fa fa-eye"></span>
-        </span>
-      </li>
-    </ul>
+      <div class="sidebar__caption">Users</div>
+      <ul class="sidebar__list sidebar__list--switcher" ng-class="{ 'sidebar__list--disabled' : app.users.busy }">
+        <li ng-repeat="user in app.users.items" ng-class="{ active : app.users.active === user._id, 'sidebar__list--disabled' : user.busy }" ng-click="app.users.setActive(user)">
+          <span ng-bind="user.name"></span>
+          <span ng-if="user.is_running">
+            &#160;
+            <span class="fa fa-eye"></span>
+          </span>
+        </li>
+      </ul>
+    </div>
   </aside>
 
   <section class="test">
     <div class="message" ng-if="!app.servers.items.length">
       Welcome! Please add a server before you can start testing...
     </div>
-    <div class="message" ng-if="app.servers.connectionStatus === 'up' && app.servers.active && app.tests.active && !app.users.active">
-      Please select a user from the sidebar. New users automatically appear once they start a test.
-    </div>
-
-    <div class="message" ng-if="app.heatmaps.busy">
-      Loading data...
-    </div>
-
-    <div class="message" ng-if="app.servers.connectionStatus === 'up' && app.users.dataRunning && !app.users.dataRunning.is_running">
-      The user has finished testing. Click <button class="inline" ng-click="app.users.setActive(app.users.dataRunning)">here</button> to view the results.
-    </div>
 
     <div class="message" ng-if="app.servers.items.length && (app.servers.connectionStatus === 'idle' || app.servers.connectionStatus === 'connecting')">
       <span class="fa fa-plug"></span>
     </div>
+
     <div class="message" ng-if="app.servers.items.length && app.servers.connectionStatus === 'down'">
       <span class="fa fa-plug"></span>
       <span class="fa fa-bolt"></span>
     </div>
 
-    <div class="test__container" ng-if="app.servers.connectionStatus === 'up' && app.users.active && ((app.users.dataRunning && app.users.dataRunning.is_running) || app.heatmaps.active)" ng-style="{ width : ((app.users.dataRunning || app.heatmaps.active).screen_width || 0) + 'px', height : ((app.users.dataRunning || app.heatmaps.active).screen_height || 0) + 'px' }">
-      <iframe class="frame" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts" ng-src="{{ (app.users.dataRunning || app.heatmaps.active).last_page_url | rawSrc }}"></iframe>
-      <div class="frame__overlay">
-        <div class="eye__current" ng-if="(app.users.dataRunning || app.heatmaps.active || {}).eye" ng-style="{ left : (app.users.dataRunning || app.heatmaps.active).eye[0] + 'px', top : (app.users.dataRunning || app.heatmaps.active).eye[1] + 'px'  }"></div>
-        <canvas id="heatmapCanvas" ng-if="app.heatmaps.active && !app.heatmaps.active.eye" heatmap="{ active : app.heatmaps.active, config : app.heatmaps.config }"></canvas>
+    <div ng-if="app.servers.connectionStatus === 'up' && app.servers.active">
+      <div ng-if="!app.tests.editing">
+        <div class="message" ng-if="!app.tests.items.length">
+          Please create a test by clicking <span class="link" ng-click="app.tests.edit()">here</span>.
+        </div>
+
+        <div class="message" ng-if="!app.tests.active && !app.tests.editing">
+          Please select a test from the sidebar.
+        </div>
+
+        <div class="message" ng-if="app.servers.active && app.tests.active && !app.users.active">
+          Please select a user from the sidebar. New users automatically appear once they start a test.
+        </div>
+
+        <div class="message" ng-if="app.users.dataRunning && !app.users.dataRunning.is_running">
+          The user has finished testing. Click <span class="link" ng-click="app.users.setActive(app.users.dataRunning)">here</span> to view the results.
+        </div>
+
+        <div class="message" ng-if="app.heatmaps.busy">
+          Loading data...
+        </div>
+
+        <div class="test__container" ng-if="app.users.active && ((app.users.dataRunning && app.users.dataRunning.is_running) || app.heatmaps.active)" ng-style="{ width : ((app.users.dataRunning || app.heatmaps.active).screen_width || 0) + 'px', height : ((app.users.dataRunning || app.heatmaps.active).screen_height || 0) + 'px' }">
+          <iframe class="frame" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts" ng-src="{{ (app.users.dataRunning || app.heatmaps.active).last_page_url | rawSrc }}"></iframe>
+          <div class="frame__overlay">
+            <div class="eye__current" ng-if="(app.users.dataRunning || app.heatmaps.active || {}).eye" ng-style="{ left : (app.users.dataRunning || app.heatmaps.active).eye[0] + 'px', top : (app.users.dataRunning || app.heatmaps.active).eye[1] + 'px'  }"></div>
+            <canvas id="heatmapCanvas" ng-if="app.heatmaps.active && !app.heatmaps.active.eye" heatmap="{ active : app.heatmaps.active, config : app.heatmaps.config }"></canvas>
+          </div>
+
+          <div class="control" ng-if="app.heatmaps.active">
+            <div class="control__item">
+              <div class="control__item--label">URL</div>
+              <select ng-change="app.heatmaps.select()" ng-model="app.heatmaps.active" ng-options="obj as obj.url for obj in app.heatmaps.items"></select>
+            </div>
+            <div class="control__item">
+              <div class="control__item--label">Radius</div>
+              <input type="range" min="10" max="50" ng-model="app.heatmaps.config.radius" />
+            </div>
+            <div class="control__item">
+              <div class="control__item--label">Blur</div>
+              <input type="range" min="10" max="50" ng-model="app.heatmaps.config.blur" />
+            </div>
+            <div class="control__item">
+              <span class="control__item--button fa fa-play-circle" ng-class="{ active : app.heatmaps.active.eye }" ng-click="app.heatmaps.toggleReplay()"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="control" ng-if="app.heatmaps.active">
-        <div class="control__item"> 
-          <div class="control__item--label">URL</div>
-          <select ng-change="app.heatmaps.select()" ng-model="app.heatmaps.active" ng-options="obj as obj.url for obj in app.heatmaps.items"></select>
-        </div>
-        <div class="control__item">
-          <div class="control__item--label">Radius</div>
-          <input type="range" min="10" max="50" ng-model="app.heatmaps.config.radius" />
-        </div>
-        <div class="control__item">
-          <div class="control__item--label">Blur</div>
-          <input type="range" min="10" max="50" ng-model="app.heatmaps.config.blur" />
-        </div>
-        <div class="control__item">
-          <span class="control__item--button fa fa-play-circle" ng-class="{ active : app.heatmaps.active.eye }" ng-click="app.heatmaps.toggleReplay()"></span>
-        </div>
+      <div class="settings" ng-if="app.tests.editing">
+        <ul class="settings__tabs">
+          <li ng-class="{ active : app.tests.editing.type === 'website' }" ng-click="app.tests.editing.type = 'website'">Website</li>
+          <li ng-class="{ active : app.tests.editing.type === 'mock' }" ng-click="app.tests.editing.type = 'mock'">Mock</li>
+        </ul>
+
+        <div  ng-if="app.tests.editing.type === 'website'" ng-include="'/partials/edit_test.html'"></div>
+
+        <form class="form" ng-if="app.tests.editing.type === 'mock'">
+          not ready yet...
+        </form>
       </div>
     </div>
   </section>

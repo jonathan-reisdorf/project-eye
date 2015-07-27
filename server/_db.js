@@ -71,7 +71,9 @@ exports.generic = function(collectionName, server) {
   expose.update = function(req, res, incrementally) {
     var id = req.params.id;
     var item = req.body;
+    delete item._id;
     item = incrementally ? { $set : item } : item;
+
     console.log('Updating ' + collectionName + ': ' + id);
     expose.collection.update({ '_id' : mongo.ObjectID(id) }, item, {safe:true}, function(err, result) {
       if (err) {

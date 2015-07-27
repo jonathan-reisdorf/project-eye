@@ -4,14 +4,22 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', function($rootScop
   var testsResource = function() {
     return $resource('http://' + CommonServers.active + '/tests');
   };
+  var testResource = function() {
+    return $resource('http://' + CommonServers.active + '/tests/:test_id', { test_id : '@_id' }, {
+      update : { method : 'PUT' }
+    });
+  };
 
   self.items = [];
   self.busy = false;
+  self.editing = false;
 
   self.setActive = function(id) {
     if (self.busy) {
       return;
     }
+
+    self.editing = false;
 
     var active = id || self.active || (self.items[0] || {})._id;
     if (active && !self.items.filter(function(item) {
@@ -50,19 +58,20 @@ module.exports = ['$rootScope', '$resource', 'CommonServers', function($rootScop
     CommonServers.fayeClient.subscribe('/server_messages', function() {});
   });
 
-  self.add = function() {
-    var config = {
-      name : prompt('Please enter the test name:'),
-      url : prompt('Please enter the test URL:'),
-      description : prompt('Please enter the test description:'),
-      intro : prompt('Please enter the test intro:')
+  self.edit = function(test) {
+    self.active = false;
+    self.editing = angular.copy(test) || {
+      type : 'website'
     };
-    if (!config.name || !config.url || !config.description || !config.intro) { return; }
+  };
 
+  self.save = function(test) {
     self.busy = true;
-    testsResource().save({}, config, function() {
+    var isNew = !test._id;
+    (isNew ? testsResource() : testResource())[isNew ? 'save' : 'update']({}, test, function() {
       self.items = testsResource().query();
       self.items.$promise.then(function() {
+        self.editing = false;
         self.busy = false;
       });
     });
