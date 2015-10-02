@@ -11,13 +11,13 @@
 if (window.parent) {
     window.parent.postMessage({
         href : document.location.href,
-        origin : document.location.origin
+        origin : document.location.hostname
     }, '*');
     
     window.addEventListener('scroll', function() {
         window.parent.postMessage({
             scroll : document.documentElement.scrollTop || document.body.scrollTop,
-            origin : document.location.origin
+            origin : document.location.hostname
         }, '*');
     });
 }

@@ -30,7 +30,7 @@ $(function() {
       this.client.unsubscribe(this.getUserUrl());
     },
     receiveMessage : function(message) {
-      if (message && message.data && message.data.origin.indexOf(steps.testData.url) !== -1) {
+      if (message && message.data && steps.testData.url.indexOf(message.data.origin) !== -1) {
         if (message.data.href) {
           serverEvents.saveInDb({
             last_page_url : message.data.href
