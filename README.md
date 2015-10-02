@@ -28,12 +28,9 @@ In order to start, you need the following Hard- / Software:
 
 ```
 cd server
-npm install -g gulp
 set_path.cmd
 REM set_path.cmd is only optional -- only if cl compile tools are not available in command line
-cd gazejs
-npm install
-cd ..
+npm install -g gulp
 npm install
 node server.js
 ```

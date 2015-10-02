@@ -1,7 +1,7 @@
 module.exports = (function() {
   'use strict';
 
-  var gazejs = require('./gazejs')
+  var gazejs = require('gazejs')
   var eyeTracker;
 
   var listener = {
