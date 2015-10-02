@@ -60,7 +60,7 @@
           Please create a test by clicking <span class="link" ng-click="app.tests.edit()">here</span>.
         </div>
 
-        <div class="message" ng-if="!app.tests.active && !app.tests.editing">
+        <div class="message" ng-if="!app.tests.active && !app.tests.editing && app.tests.items.length">
           Please select a test from the sidebar.
         </div>
 

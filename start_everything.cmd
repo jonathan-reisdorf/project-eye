@@ -11,7 +11,6 @@ call start gulp watch
 call start gulp server
 
 cd ..\server
-call start start_mongod.cmd
 call start node server.js
 
 cd ..

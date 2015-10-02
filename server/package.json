@@ -7,7 +7,7 @@
     "body-parser": "^1.13.2",
     "express": "^4.13.1",
     "faye": "^1.1.1",
-    "mongodb": "^2.0.39",
+    "nedb": "^1.2.1",
     "permessage-deflate": "^0.1.3"
   }
 }

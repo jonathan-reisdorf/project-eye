@@ -67,16 +67,15 @@ module.exports = function(control, tests) {
           accumulated_depth : maxDepth
         };
 
-      tests.heatmapsDb.db.open(function() {
-        tests.heatmapsDb.add({
-          body : result
-        }, {
-          send : function() {}
-        });
+      tests.heatmapsDb.add({
+        body : result
+      }, {
+        send : function() {}
       });
     },
     processEyeData : function(eyeData) {
       if (eyeLocked) { return null; }
+      console.log(eyeData);
       if (!currentPageData.url || !resolution.width || !resolution.height || !eyeData.prefered || eyeData.prefered.x === undefined || eyeData.prefered.y === undefined) {
         if (lastEyeContact && eyeData.timeSeconds && eyeData.timeSeconds - lastEyeContact > 7 && actions.onFinishedTest) {
           eyeLocked = true;

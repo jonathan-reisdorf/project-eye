@@ -16,22 +16,21 @@ module.exports = function(control, tests, heatmaps) {
   };
 
   var subscribeNewUser = function(data) {
+    console.log('subscribeNewUser', data.test_id, data._id);
     control.client.subscribe('/tests/' + data.test_id + '/user/' + data._id, function(userData) {
       if (userData.db) {
+        console.log('detailChanged', userData.db);
         heatmaps.dbDetailChanged(userData.db);
-
-        tests.usersDb.db.open(function() {
-          tests.usersDb.update({
-            params : {
-              id : data._id
-            },
-            body : userData.db
-          }, {
-            send : function(result) {
-              // todo: handle error case etc.
-            }
-          }, true);
-        });
+        tests.usersDb.update({
+          params : {
+            id : data._id
+          },
+          body : userData.db
+        }, {
+          send : function(result) {
+            // todo: handle error case etc.
+          }
+        }, true);
       }
 
       if (userData.temporary) {
@@ -47,8 +46,8 @@ module.exports = function(control, tests, heatmaps) {
     };
   };
 
-  tests.testsDb.db.open(function() {
-    tests.testsDb.collection.find().forEach(function(data) {
+  tests.testsDb.collection.find({}, function(err, docs) {
+    (docs || []).forEach(function(data) {
       control.client.subscribe('/tests/' + data._id + '/users', function(data) {
         if (data.added) {
           subscribeNewUser(data.added);
