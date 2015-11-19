@@ -5,12 +5,11 @@
 In order to start, you need the following Hard- / Software:
 
 ## For Server:
-- Device with Windows 7+ (ideally x64) - Mac / Linux currently unsupported due to hardware vendor
-- Tobii EyeX Controller (other hardware should work as well if you modify the source)
+- Device with Windows 7+ (ideally x64) - Mac / Linux currently untested / unsupported
+- Tobii EyeX Controller or SR EyeLink (untested!)
 - USB 3 Port
 - Node.js
-- MongoDb Server (https://www.mongodb.org/downloads)
-- Latest Tobii Gaze SDK (already included in the project source; please read the license agreement before using it)
+- Latest Tobii Gaze SDK (already included in the project source; please read the license agreement before using it) or SR EyeLink SDK
 - Visual Studio 2013 Express (or higher) - necessary for compiling dependencies
 
 ## For Remote or Client

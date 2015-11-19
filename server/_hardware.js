@@ -1,8 +1,13 @@
 module.exports = (function() {
   'use strict';
 
-  var gazejs = require('gazejs')
-  var eyeTracker;
+  var gazejs = require('gazejs');
+  var eyeTracker = gazejs.createEyeTracker(gazejs.TOBII_GAZE_SDK);
+
+  eyeTracker.init();
+
+  console.log('Library version: ' + eyeTracker.getLibraryVersion());
+  console.log('Model name: ' + eyeTracker.getModelName());
 
   var listener = {
     onStart : function() {
@@ -16,25 +21,13 @@ module.exports = (function() {
     }
   };
 
-  var reset = function() {
-    if (eyeTracker) {
-      eyeTracker.stop();
-    }
-
-    eyeTracker = gazejs.createEyeTracker(gazejs.TOBII_GAZE_SDK);
-    eyeTracker.init();
-    eyeTracker.setListener(listener);
-    // console.log('Library version: ' + eyeTracker.getLibraryVersion());
-    // console.log('Model name: ' + eyeTracker.getModelName());
-  };
-
-  reset();
+  eyeTracker.setListener(listener);
 
   return {
     listener : listener,
     getEyeTracker : function() {
       return eyeTracker;
     },
-    resetEyetracker : reset
+    resetEyetracker : eyeTracker.stop
   };
 })();
